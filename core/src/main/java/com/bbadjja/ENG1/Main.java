@@ -8,6 +8,7 @@ public class Main extends Game {
 
     @Override
     public void create() {
+        // TODO Change viewport size to appropriate value
         viewport = new FitViewport(8, 5);
 
         this.setScreen(new GameScreen(this));

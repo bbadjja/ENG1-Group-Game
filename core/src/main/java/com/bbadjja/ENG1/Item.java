@@ -1,6 +1,6 @@
 package com.bbadjja.ENG1;
 
-public class Item {
+public abstract class Item {
     Integer itemID;
     String name;
 
@@ -14,5 +14,7 @@ public class Item {
         //  - OnUse
         //  -
     }
+
+    public abstract void onUse();
 
 }
