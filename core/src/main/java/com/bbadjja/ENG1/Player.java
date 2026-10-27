@@ -21,6 +21,9 @@ public class Player{
 
     private final int INVENTORY_SIZE = 5;
 
+    /**
+     * Creates a {@code Player} which can move and interact with other entities
+     */
     public Player() {
         sprite = new Sprite(TEXTURE);
         hitbox = new Rectangle();
@@ -30,11 +33,17 @@ public class Player{
         hidden = false;
     }
 
+    /**
+     * Instantiates the player's initial items and fills the inventory with them
+     */
     private void fillInventory() {
         // TODO Initialise initial items and place into inventory
         //  E.g. inventory.set(0,Seed());
     }
 
+    /**
+     * Takes input from the user and translates it into player movement
+     */
     public void move() {
         // Called by GameScreen / GameLogic in a function that runs every frame e.g. render
 
@@ -63,6 +72,9 @@ public class Player{
         hitbox.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
     }
 
+    /**
+     * Takes input from the user and uses the corresponding item
+     */
     public void useItem() {
         // Called by GameScreen / GameLogic in a function that runs every frame e.g. render
         try {
@@ -83,6 +95,12 @@ public class Player{
 
     }
 
+    /**
+     * Attempts to pick up an item the player has collided with
+     *
+     * @param item the item to be picked up
+     * @return whether the item could be picked up, false if inventory is full
+     */
     public boolean pickupItem(Item item) {
         // Called by GameScreen / GameLogic when player's hitbox collides with
         //  item's hitbox/location?
@@ -97,13 +115,27 @@ public class Player{
 
     }
 
+    /**
+     * Changes the player's health and notifies GameScreen to update the healthbar
+     *
+     * @param amount the amount to change the health by, can be negative
+     */
     public void changeHealth(int amount) {
         health += amount;
         // TODO Notify other classes that health has changed - e.g. healthbar on screen
     }
 
+    /**
+     * Changes the player's movement speed
+     *
+     * @param amount the amount to change movement speed by, can be negative
+     */
     public void changeSpeed(int amount) {
         movementSpeed += amount;
     }
+
+    // TODO ask whether getting player input should be moved into its own function
+    //  This function would then call move() and useItem() accordingly
+    //  Would also result in only 1 function being called from GameScreen every frame
 
 }
