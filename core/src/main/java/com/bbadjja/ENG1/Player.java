@@ -1,6 +1,5 @@
 package com.bbadjja.ENG1;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -8,10 +7,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Player{
-    private final Texture TEXTURE = new Texture("texturePathHere.png");
+    private final Texture TEXTURE = new Texture("char_temp.png");
     Sprite sprite;
     Rectangle hitbox;
     List<Item> inventory;
@@ -21,16 +22,20 @@ public class Player{
 
     private final int INVENTORY_SIZE = 5;
 
+    Set<Integer> currentInputs;
+
     /**
      * Creates a {@code Player} which can move and interact with other entities
      */
     public Player() {
         sprite = new Sprite(TEXTURE);
+        sprite.setSize(1,1);
         hitbox = new Rectangle();
         inventory = new ArrayList<>(INVENTORY_SIZE); // empty list size 5
         health = 100; // Decide on max health
-        movementSpeed = 20; // Decide on start movementSpeed
+        movementSpeed = 10; // Decide on start movementSpeed
         hidden = false;
+        currentInputs = new HashSet<>();
     }
 
     /**
@@ -44,24 +49,23 @@ public class Player{
     /**
      * Takes input from the user and translates it into player movement
      */
-    public void move() {
+    public void move(float delta) {
         // Called by GameScreen / GameLogic in a function that runs every frame e.g. render
 
-        float delta = Gdx.graphics.getDeltaTime();
         float scaledSpeed = movementSpeed * delta;
         Vector2 direction = new Vector2(0,0);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
-            direction.x = 1;
+        if (currentInputs.contains(Input.Keys.RIGHT)) {
+            direction.x += 1;
         }
-        else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
-            direction.x = -1;
+        if (currentInputs.contains(Input.Keys.LEFT)) {
+            direction.x -= 1;
         }
-        else if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
-            direction.y = 1;
+        if (currentInputs.contains(Input.Keys.UP)) {
+            direction.y += 1;
         }
-        else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
-            direction.y = -1;
+        if (currentInputs.contains(Input.Keys.DOWN)) {
+            direction.y -= 1;
         }
 
         Vector2 velocity = direction.scl(scaledSpeed).setLength(scaledSpeed);
@@ -75,24 +79,9 @@ public class Player{
     /**
      * Takes input from the user and uses the corresponding item
      */
-    public void useItem() {
-        // Called by GameScreen / GameLogic in a function that runs every frame e.g. render
-        try {
-            if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
-                inventory.get(0).onUse();
-            } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
-                inventory.get(1).onUse();
-            } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
-                inventory.get(2).onUse();
-            } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_4)) {
-                inventory.get(3).onUse();
-            } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_5)) {
-                inventory.get(4).onUse();
-            }
-        } catch (IndexOutOfBoundsException e) {
-            // Tried to use an empty inventory slot - can ignore exception
-        }
-
+    public void useItem(int slot) {
+        // Called by PlayerInputAdaptor
+        inventory.get(slot).onUse();
     }
 
     /**
