@@ -33,7 +33,7 @@ public class Player{
         hitbox = new Rectangle();
         inventory = new ArrayList<>(INVENTORY_SIZE); // empty list size 5
         health = 100; // Decide on max health
-        movementSpeed = 10; // Decide on start movementSpeed
+        movementSpeed = 5; // Decide on start movementSpeed
         hidden = false;
         currentInputs = new HashSet<>();
     }
@@ -121,6 +121,10 @@ public class Player{
      */
     public void changeSpeed(int amount) {
         movementSpeed += amount;
+    }
+
+    public int getSpeed() {
+        return this.movementSpeed;
     }
 
     // TODO ask whether getting player input should be moved into its own function

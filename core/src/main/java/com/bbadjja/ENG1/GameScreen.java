@@ -12,10 +12,19 @@ public class GameScreen implements Screen {
     Player player;
     private final Texture BACKGROUND = new Texture("map_temp.png");
 
+
     public GameScreen(final Main game) {
         this.game = game;
+
+        float worldWidth = game.viewport.getMinWorldWidth();
+        float worldHeight = game.viewport.getMinWorldHeight();
+
         player = new Player();
+        player.sprite.setCenter(worldWidth/2,worldHeight/2);
         Gdx.input.setInputProcessor(new PlayerInputAdaptor(player));
+
+        Goose testGoose = new Goose();
+        testGoose.sprite.setX(-2);
     }
 
     @Override
@@ -29,10 +38,10 @@ public class GameScreen implements Screen {
 
         GameLogic.update(this,delta);
         draw();
+
     }
 
     private void draw() {
-        // Draw your screen here. "delta" is the time since last render in seconds.
         ScreenUtils.clear(Color.BLACK);
         game.viewport.apply();
 
