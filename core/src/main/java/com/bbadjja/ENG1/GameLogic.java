@@ -13,8 +13,12 @@ public class GameLogic {
             screen.player.move(delta);
         }
 
+        // Centers Camera on player
         float playerX = screen.player.sprite.getX();
         float playerY = screen.player.sprite.getY();
-        screen.game.viewport.getCamera().position.set(playerX,playerY,0);
+        float offsetX = screen.player.sprite.getWidth()/2;
+        float offsetY = screen.player.sprite.getHeight()/2;
+        screen.game.viewport.getCamera().position.set(playerX+offsetX,playerY+offsetY,0);
+
     }
 }

@@ -23,6 +23,7 @@ public class GameScreen implements Screen {
         player.sprite.setCenter(worldWidth/2,worldHeight/2);
         Gdx.input.setInputProcessor(new PlayerInputAdaptor(player));
 
+        // TODO temp remove this
         Goose testGoose = new Goose();
         testGoose.sprite.setX(-2);
     }
@@ -52,7 +53,11 @@ public class GameScreen implements Screen {
         float worldWidth = game.viewport.getWorldWidth();
         float worldHeight = game.viewport.getWorldHeight();
 
-        game.batch.draw(BACKGROUND, 0, 0, worldWidth, worldHeight);
+        // Draws the background at a fixed position in the center of the screen
+        game.batch.setProjectionMatrix(game.backgroundCamera.combined);
+        game.batch.draw(BACKGROUND, -worldWidth/2, -worldHeight/2, worldWidth, worldHeight);
+
+        game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
         player.sprite.draw(game.batch);
 
@@ -70,7 +75,7 @@ public class GameScreen implements Screen {
         if(width <= 0 || height <= 0) return;
 
         // Resize your screen here. The parameters represent the new window size.
-        game.viewport.update(width, height, true);
+        game.viewport.update(width, height, false);
     }
 
     @Override
