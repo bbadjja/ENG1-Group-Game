@@ -12,7 +12,6 @@ public class GameScreen implements Screen {
     Player player;
     private final Texture BACKGROUND = new Texture("map_temp.png");
 
-
     public GameScreen(final Main game) {
         this.game = game;
 
@@ -30,7 +29,12 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        // Prepare your screen here.
+        // This is called when the screen is displayed.
+        // As such anything which should start when the screen is displayed
+        //   is put in here e.g. startTime
+
+        GameLogic.startTime = System.currentTimeMillis();
+        GameLogic.togglePause();
     }
 
     @Override
@@ -38,6 +42,8 @@ public class GameScreen implements Screen {
         // This is libGDX's main loop. Anything in here will run every frame.
 
         GameLogic.update(this,delta);
+
+        System.out.println(GameLogic.displayTime);
         draw();
 
     }
@@ -64,6 +70,9 @@ public class GameScreen implements Screen {
         for (Goose goose : Goose.gooseList) {
             goose.sprite.draw(game.batch);
         }
+
+        // Draw timer onto screen
+        // Draw healthBar onto screen
 
         game.batch.end();
     }
