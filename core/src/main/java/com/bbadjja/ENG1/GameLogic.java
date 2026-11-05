@@ -62,8 +62,8 @@ public class GameLogic {
     public static void endGame(boolean win) {
         String runTime = getDisplayTime(FIVE_MINUTES - timeRemaining);
 
-        // Temporary - need permanent way to show end of game
-        // E.g. switch screen to screen that just says you lose/win
+        // TODO Temporary - need permanent way to show end of game
+        //  E.g. switch screen to screen that just says you lose/win
         GameLogic.togglePause();
     }
 }

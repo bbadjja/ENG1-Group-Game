@@ -71,8 +71,8 @@ public class GameScreen implements Screen {
             goose.sprite.draw(game.batch);
         }
 
-        // Draw timer onto screen
-        // Draw healthBar onto screen
+        // TODO Draw timer onto screen
+        // TODO Draw healthBar onto screen
 
         game.batch.end();
     }
