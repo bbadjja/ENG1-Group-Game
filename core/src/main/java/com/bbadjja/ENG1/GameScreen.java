@@ -13,7 +13,6 @@ public class GameScreen implements Screen {
     final Main game;
     Player player;
     private final Texture BACKGROUND = new Texture("map_temp.png");
-    private final Texture HEALTH_OUTLINE = new Texture("health_outline.png");
     private final Texture HEALTH = new Texture("health.png");
 
     // width and height of screen in game units I.e. independent of window size
