@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 /** First screen of the application. Displayed after the application is created. */
@@ -11,10 +14,14 @@ public class GameScreen implements Screen {
     final Main game;
     Player player;
     private final Texture BACKGROUND = new Texture("map_temp.png");
+    private final Texture HEALTH_OUTLINE = new Texture("health_outline.png");
+    private final Texture HEALTH = new Texture("health.png");
 
     // width and height of screen in game units I.e. independent of window size
     float worldWidth;
     float worldHeight;
+
+    Matrix4 fixedMatrix;
 
     /**
      * The screen on which the game is displayed
@@ -26,6 +33,9 @@ public class GameScreen implements Screen {
 
         worldWidth = game.viewport.getMinWorldWidth();
         worldHeight = game.viewport.getMinWorldHeight();
+
+        fixedMatrix = game.viewport.getCamera().combined.cpy();
+        fixedMatrix.setToOrtho2D(0, 0, worldWidth, worldHeight);
 
         player = new Player();
         player.sprite.setCenter(worldWidth/2,worldHeight/2);
@@ -66,29 +76,39 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(Color.BLACK);
 
         game.viewport.apply();
-        game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
-
         game.batch.begin();
 
-        // Draws the background at a fixed position in the center of the screen
-        game.batch.setProjectionMatrix(game.backgroundCamera.combined);
-        game.batch.draw(BACKGROUND, -worldWidth/2, -worldHeight/2, worldWidth, worldHeight);
+        // Alters coordinates to be fixed - I.e. (0,0) = bottom left
+        game.batch.setProjectionMatrix(fixedMatrix);
+        // Draws the background and HUD at fixed positions
+        game.batch.draw(BACKGROUND, 0, 0, worldWidth, worldHeight);
 
+        // TODO Draw timer onto screen - GameLogic.displayTime
+
+        // Alters coordinates to be based on camera position
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
         player.sprite.draw(game.batch);
+
+        // Calculates health
+        Rectangle healthBar = getHealthBarRect();
+        game.batch.draw(HEALTH,healthBar.x,healthBar.y,healthBar.width,healthBar.height);
 
         for (Goose goose : Goose.gooseList) {
             goose.sprite.draw(game.batch);
         }
 
-        // TODO Draw timer onto screen - GameLogic.displayTime
-
-        // TODO Draw healthBar onto screen
-
         game.batch.end();
     }
 
+    private Rectangle getHealthBarRect() {
+        float healthWidth = 1.5f * (player.getHealth() / player.MAX_HEALTH);
+        float healthHeight = 0.25f;
+        float healthBarX = player.sprite.getX() + player.sprite.getWidth()/2 - healthWidth/2;
+        float healthBarY = player.sprite.getY()-(healthHeight+0.25f);
+
+        return new Rectangle(healthBarX,healthBarY,healthWidth,healthHeight);
+    }
     /**
      * Called when a resize event occurs and handles resizing elements
      *
@@ -102,6 +122,9 @@ public class GameScreen implements Screen {
         if(width <= 0 || height <= 0) return;
 
         game.viewport.update(width, height, false);
+
+        worldWidth = game.viewport.getMinWorldWidth();
+        worldHeight = game.viewport.getMinWorldHeight();
 
         // Prevents inputs getting stuck when resizing the window
         player.currentInputs.clear();

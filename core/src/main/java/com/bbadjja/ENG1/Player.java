@@ -13,10 +13,12 @@ import java.util.Set;
 
 public class Player{
     private final Texture TEXTURE = new Texture("char_temp.png");
+    public final float MAX_HEALTH = 100.0f;
+
     Sprite sprite;
     Rectangle hitbox;
     List<Item> inventory;
-    private int health;
+    private float health;
     private int movementSpeed;
     boolean hidden;
 
@@ -32,7 +34,7 @@ public class Player{
         sprite.setSize(1,1);
         hitbox = new Rectangle();
         inventory = new ArrayList<>(INVENTORY_SIZE);
-        health = 100;
+        health = MAX_HEALTH;
         movementSpeed = 5; // TODO Decide on start movementSpeed
         hidden = false;
         currentInputs = new HashSet<>();
@@ -84,6 +86,7 @@ public class Player{
      */
     public void useItem(int slot) {
         inventory.get(slot).onUse();
+        GameLogic.itemsUsed++;
     }
 
     /**
@@ -106,13 +109,16 @@ public class Player{
     }
 
     /**
-     * Changes the player's health and notifies GameScreen to update the healthbar
+     * Changes the player's health
      *
      * @param amount the amount to change the health by, can be negative
      */
     public void changeHealth(int amount) {
         health += amount;
-        // TODO Notify other classes that health has changed - e.g. healthbar on screen
+    }
+
+    public float getHealth() {
+        return this.health;
     }
 
     /**
