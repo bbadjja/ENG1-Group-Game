@@ -8,22 +8,32 @@ int itemNumber = 0;
 Rectangle usePlacement;
 
 class Seeds extends Item {
-    Seeds(Texture itemTexture, Sprite itemSprite, String name, 
-        boolean inInventory, Rectangle initialPlacement, String itemNumber, Rectangle usePlacement) {
-        super(itemTexture) = new Texture("texturePathHere.png");
-        super(itemSprite) = new Sprite(itemTexture);
-        super(itemID) = generateItemID("2", itemNumber);
-        super(inInventory) = true;
-        super(initialPlacement) = new Rectangle(); // put initial placement here
+    Seeds(Texture texture, Sprite sprite, String name, 
+        boolean inInventory, Rectangle initialPlacement, String itemNumber, 
+        Rectangle usePlacement) {
+        super(this.texture) = new Texture("seeds_temp.png");
+        super(this.sprite) = new Sprite(this.texture);
+        super(this.itemID) = generateItemID("2", itemNumber);
+        itemNumber++;
+        super(this.inInventory) = true;
+        super(this.initialPlacement) = new Rectangle(); // put initial placement here
         usePlacement = new Rectangle(); // make null
     }
 
-    private void useItem() {
-    // do you need to take the item as a parameter or can it know
-    this.inInventory = false;
-    // something to remove sprite from inventory
-    this.usePlacement = new Rectangle(); // make current location or however far away
-    changeTarget(usePlacement, 3000); // can change to whatever time
+    /**
+     * Changes the targets of all the geese temporarily and 
+     * removes seeds from the player's inventory and visually
+     * from the game screen.
+     */
+
+    void useItem() {
+        changeTarget(Player.hitbox, 3000);
+        // also changeSpeed?
+
+        this.inInventory = false;
+        this.texture = null;
+        Player.inventory[0] = null;
+
     }
     
 }

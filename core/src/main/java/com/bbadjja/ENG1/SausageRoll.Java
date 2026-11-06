@@ -18,20 +18,28 @@ is recorded so that the geese's target can be altered
 */
 
 class SausageRoll extends Item {
-    SausageRoll(Texture itemTexture, Sprite itemSprite, String name, 
-        boolean inInventory, Rectangle initialPlacement, String itemNumber, Rectangle usePlacement) {
-        super(itemTexture) = new Texture("texturePathHere.png");
-        super(itemSprite) = new Sprite(itemTexture);
-        super(itemID) = generateItemID("1", itemNumber);
-        super(inInventory) = true;
-        super(initialPlacement) = new Rectangle(); // put initial placement here
-        usePlacement = new Rectangle(); // make null
+    SausageRoll(Texture texture, Sprite sprite, String name, 
+        boolean inInventory, Rectangle initialPlacement, String itemNumber) {
+        super(this.texture) = new Texture("sausageRoll_temp.png");
+        super(this.sprite) = new Sprite(this.texture);
+        super(this.itemID) = generateItemID("1", itemNumber);
+        itemNumber++;
+        super(this.inInventory) = true;
+        super(this.initialPlacement) = new Rectangle(); // put initial placement here
     }
 
-    private void useItem() {
+    void useItem() {
         // do you need to take the item as a parameter or can it know
+
+        if(Player.health > 90) { // what is player health and its increments?
+            Player.health = 100;
+        }
+        else {
+             Player.health = Player.health + 15;
+        }
+
         this.inInventory = false;
-        // something to remove sprite from inventory
-        // increase player health
+        this.texture = null;
+        Player.inventory[1] = null;
     }
 }
