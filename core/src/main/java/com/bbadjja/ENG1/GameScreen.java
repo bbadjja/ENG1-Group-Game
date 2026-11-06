@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 /** First screen of the application. Displayed after the application is created. */
@@ -101,6 +100,11 @@ public class GameScreen implements Screen {
         game.batch.end();
     }
 
+    /**
+     * Convenience method for calculating the coords and size of the healthBar
+     *
+     * @return the rectangle containing the x, y, width and height of healthBar
+     */
     private Rectangle getHealthBarRect() {
         float healthWidth = 1.5f * (player.getHealth() / player.MAX_HEALTH);
         float healthHeight = 0.25f;
@@ -109,6 +113,7 @@ public class GameScreen implements Screen {
 
         return new Rectangle(healthBarX,healthBarY,healthWidth,healthHeight);
     }
+
     /**
      * Called when a resize event occurs and handles resizing elements
      *
