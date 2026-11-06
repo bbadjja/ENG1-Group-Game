@@ -11,6 +11,9 @@ public class Main extends Game {
     public Camera backgroundCamera;
     public SpriteBatch batch;
 
+    /**
+     * Called when the game is started, sets up game elements such as screen
+     */
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -26,6 +29,9 @@ public class Main extends Game {
         super.render();
     }
 
+    /**
+     * Called when the game is closed, disposes all game elements
+     */
     @Override
     public void dispose() {
         screen.dispose();

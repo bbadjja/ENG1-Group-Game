@@ -31,9 +31,9 @@ public class Player{
         sprite = new Sprite(TEXTURE);
         sprite.setSize(1,1);
         hitbox = new Rectangle();
-        inventory = new ArrayList<>(INVENTORY_SIZE); // empty list size 5
-        health = 100; // Decide on max health
-        movementSpeed = 5; // Decide on start movementSpeed
+        inventory = new ArrayList<>(INVENTORY_SIZE);
+        health = 100;
+        movementSpeed = 5; // TODO Decide on start movementSpeed
         hidden = false;
         currentInputs = new HashSet<>();
     }
@@ -47,11 +47,11 @@ public class Player{
     }
 
     /**
-     * Takes input from the user and translates it into player movement
+     * Translates inputs from {@code PlayerInputListener} into player movement
+     *
+     * @param delta the time in seconds since the previous frame
      */
     public void move(float delta) {
-        // Called by GameScreen / GameLogic in a function that runs every frame e.g. render
-
         float scaledSpeed = movementSpeed * delta;
         Vector2 direction = new Vector2(0,0);
 
@@ -68,6 +68,7 @@ public class Player{
             direction.y -= 1;
         }
 
+        // Allows diagonal movement and prevents this being faster than normal
         Vector2 velocity = direction.scl(scaledSpeed).setLength(scaledSpeed);
 
         sprite.setX(sprite.getX()+velocity.x);
@@ -77,10 +78,11 @@ public class Player{
     }
 
     /**
-     * Takes input from the user and uses the corresponding item
+     * Uses the item in the specified inventory slot
+     *
+     * @param slot the slot where the item resides in inventory, zero-indexed
      */
     public void useItem(int slot) {
-        // Called by PlayerInputAdaptor
         inventory.get(slot).onUse();
     }
 
@@ -91,10 +93,9 @@ public class Player{
      * @return whether the item could be picked up, false if inventory is full
      */
     public boolean pickupItem(Item item) {
-        // Called by GameScreen / GameLogic when player's hitbox collides with
+        // TODO Called by GameScreen / GameLogic when player's hitbox collides with
         //  item's hitbox/location?
 
-        // TODO Check inventory.size() = number of items currently in inventory and not 5
         if (inventory.size() == INVENTORY_SIZE) {
             return false;
         } else {
@@ -126,9 +127,5 @@ public class Player{
     public int getSpeed() {
         return this.movementSpeed;
     }
-
-    // TODO ask whether getting player input should be moved into its own function
-    //  This function would then call move() and useItem() accordingly
-    //  Would also result in only 1 function being called from GameScreen every frame
 
 }

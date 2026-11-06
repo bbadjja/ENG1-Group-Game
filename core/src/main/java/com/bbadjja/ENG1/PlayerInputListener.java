@@ -3,10 +3,15 @@ package com.bbadjja.ENG1;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 
-public class PlayerInputAdaptor extends InputAdapter {
+public class PlayerInputListener extends InputAdapter {
     Player player;
 
-    public PlayerInputAdaptor(Player player) {
+    /**
+     * A Listener which handles any inputs relating to the {@code player}
+     *
+     * @param player the target of all inputs handled by this listener
+     */
+    public PlayerInputListener(Player player) {
         this.player = player;
     }
 
@@ -14,7 +19,7 @@ public class PlayerInputAdaptor extends InputAdapter {
      * Called when a key is pressed down. Reports the keycode to {@code player}.
      *
      * @param keycode the keycode of the key which was just pressed
-     * @return {@code true} if the event was handled
+     * @return {@code true} if the input was handled
      */
     @Override
     public boolean keyDown(int keycode) {
@@ -32,10 +37,12 @@ public class PlayerInputAdaptor extends InputAdapter {
                 player.currentInputs.add(Keys.DOWN);
                 break;
             case Keys.NUM_1, Keys.NUM_2, Keys.NUM_3, Keys.NUM_4, Keys.NUM_5:
-                player.useItem(keycode-7);
+                // -8 because Keys.NUM_1 = 8, Keys.NUM_2 = 9 etc
+                player.useItem(keycode-8);
                 break;
             case Keys.ESCAPE:
                 GameLogic.togglePause();
+
         }
 
         return true;
@@ -45,7 +52,7 @@ public class PlayerInputAdaptor extends InputAdapter {
      * Called when a key is released. Reports the keycode to other {@code player}.
      *
      * @param keycode the keycode of the key which was released.
-     * @return {@code true} if the event was handled
+     * @return {@code true} if the input was handled
      */
     @Override
     public boolean keyUp(int keycode) {
@@ -61,7 +68,7 @@ public class PlayerInputAdaptor extends InputAdapter {
                 break;
             case Keys.S, Keys.DOWN:
                 player.currentInputs.remove(Keys.DOWN);
-                break;
+
         }
 
         return true;

@@ -12,52 +12,63 @@ public class GameScreen implements Screen {
     Player player;
     private final Texture BACKGROUND = new Texture("map_temp.png");
 
+    // width and height of screen in game units I.e. independent of window size
+    float worldWidth;
+    float worldHeight;
+
+    /**
+     * The screen on which the game is displayed
+     *
+     * @param game the entrypoint of the game
+     */
     public GameScreen(final Main game) {
         this.game = game;
 
-        float worldWidth = game.viewport.getMinWorldWidth();
-        float worldHeight = game.viewport.getMinWorldHeight();
+        worldWidth = game.viewport.getMinWorldWidth();
+        worldHeight = game.viewport.getMinWorldHeight();
 
         player = new Player();
         player.sprite.setCenter(worldWidth/2,worldHeight/2);
-        Gdx.input.setInputProcessor(new PlayerInputAdaptor(player));
+        Gdx.input.setInputProcessor(new PlayerInputListener(player));
 
         // TODO temp remove this
         Goose testGoose = new Goose();
         testGoose.sprite.setX(-2);
     }
 
+    /**
+     * Called when the screen is displayed
+     */
     @Override
     public void show() {
-        // This is called when the screen is displayed.
-        // As such anything which should start when the screen is displayed
-        //   is put in here e.g. startTime
-
         GameLogic.startTime = System.currentTimeMillis();
         GameLogic.togglePause();
     }
 
+    /**
+     * Runs every frame and handles rendering the screen
+     *
+     * <p>This method is used as the main game loop. Any event which
+     * should happen every frame is called from this method.</p>
+     *
+     * @param delta the time in seconds since the previous frame
+     */
     @Override
     public void render(float delta) {
-        // This is libGDX's main loop. Anything in here will run every frame.
-
         GameLogic.update(this,delta);
-
-        System.out.println(GameLogic.displayTime);
         draw();
-
     }
 
+    /**
+     * Clears and then redraws sprites to the screen
+     */
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
-        game.viewport.apply();
 
+        game.viewport.apply();
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
         game.batch.begin();
-
-        float worldWidth = game.viewport.getWorldWidth();
-        float worldHeight = game.viewport.getWorldHeight();
 
         // Draws the background at a fixed position in the center of the screen
         game.batch.setProjectionMatrix(game.backgroundCamera.combined);
@@ -71,31 +82,48 @@ public class GameScreen implements Screen {
             goose.sprite.draw(game.batch);
         }
 
-        // TODO Draw timer onto screen
+        // TODO Draw timer onto screen - GameLogic.displayTime
+
         // TODO Draw healthBar onto screen
 
         game.batch.end();
     }
 
+    /**
+     * Called when a resize event occurs and handles resizing elements
+     *
+     * @param width the new width of the window, 0 if minimized
+     * @param height the new height of the window, 0 if minimized
+     */
     @Override
     public void resize(int width, int height) {
         // If the window is minimized on a desktop (LWJGL3) platform, width and height are 0, which causes problems.
         // In that case, we don't resize anything, and wait for the window to be a normal size before updating.
         if(width <= 0 || height <= 0) return;
 
-        // Resize your screen here. The parameters represent the new window size.
         game.viewport.update(width, height, false);
+
+        // Prevents inputs getting stuck when resizing the window
+        player.currentInputs.clear();
     }
 
+    /**
+     * Called whenever the application is paused
+     *
+     * <p>Note this is different to the game being paused. An application
+     * pause is caused by events such as minimizing the window.</p>
+     */
     @Override
     public void pause() {
         // Invoked when your application is paused.
         GameLogic.togglePause();
     }
 
+    /**
+     * Called whenever the application is resumed (see {@link #pause()})
+     */
     @Override
     public void resume() {
-        // Invoked when your application is resumed after pause.
         GameLogic.togglePause();
     }
 
@@ -104,9 +132,11 @@ public class GameScreen implements Screen {
         // This method is called when another screen replaces this one.
     }
 
+    /**
+     * Called when screen is to be disposed and destroys screen assets
+     */
     @Override
     public void dispose() {
-        // Destroy screen's assets here.
         BACKGROUND.dispose();
         player.sprite.getTexture().dispose();
     }

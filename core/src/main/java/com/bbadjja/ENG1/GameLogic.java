@@ -14,6 +14,9 @@ public class GameLogic {
 
     public static String displayTime = "5:00";
 
+    /**
+     * Toggles the state of game execution between paused and unpaused
+     */
     public static void togglePause() {
         isPaused = !isPaused;
         // Add calls to other Classes with pause / onPause methods etc?
@@ -24,6 +27,12 @@ public class GameLogic {
         }
     }
 
+    /**
+     * Handles any event which should happen every frame
+     *
+     * @param screen the screen containing all game content
+     * @param delta the time in seconds since the previous frame
+     */
     public static void update(GameScreen screen, float delta) {
         if (!isPaused){
             screen.player.move(delta);
@@ -37,6 +46,8 @@ public class GameLogic {
                 displayTime = getDisplayTime(timeRemaining);
             }
         }
+        // TODO do we want the camera to always be centered on the player or
+        //  follow behind slightly, catching up when the player stops
 
         // Centers Camera on player
         float playerX = screen.player.sprite.getX();
@@ -46,6 +57,12 @@ public class GameLogic {
         screen.game.viewport.getCamera().position.set(playerX+offsetX,playerY+offsetY,0);
     }
 
+    /**
+     * Convenience method to translate time into the format M:SS
+     *
+     * @param milliseconds the time in milliseconds
+     * @return the time in the format M:SS | M = Minutes and S = Seconds
+     */
     public static String getDisplayTime(long milliseconds) {
         int seconds = (int) Math.round(milliseconds/1000.0);
         int minutes = seconds / 60;
@@ -59,6 +76,11 @@ public class GameLogic {
         return minutes + splitter + seconds;
     }
 
+    /**
+     * Handles ending the game
+     *
+     * @param win true if the player won the game, else false
+     */
     public static void endGame(boolean win) {
         String runTime = getDisplayTime(FIVE_MINUTES - timeRemaining);
 
