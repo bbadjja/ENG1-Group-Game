@@ -4,36 +4,38 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-int itemNumber = 0;
-Rectangle usePlacement;
-
 class Seeds extends Item {
-    Seeds(Texture texture, Sprite sprite, String name, 
-        boolean inInventory, Rectangle initialPlacement, String itemNumber, 
-        Rectangle usePlacement) {
-        super(this.texture) = new Texture("seeds_temp.png");
-        super(this.sprite) = new Sprite(this.texture);
-        super(this.itemID) = generateItemID("2", itemNumber);
+    private static int itemNumber = 0;
+    private final static Texture TEXTURE = new Texture("char_temp.png");
+
+    public Seeds(boolean inInventory) {
+        // TODO initialPlacement could be got from a list using itemNumber as the index
+        //  if inInventory is true, item was placed into inventory when created
+        //  so no initalPlacement needed, so initalPlacement can be null - conditional
+        super("SausageRoll",TEXTURE,inInventory,null);
+
         itemNumber++;
-        super(this.inInventory) = true;
-        super(this.initialPlacement) = new Rectangle(); // put initial placement here
-        usePlacement = new Rectangle(); // make null
+        this.itemID = generateItemID("1",itemNumber);
     }
 
     /**
-     * Changes the targets of all the geese temporarily and 
+     * Changes the targets of all the geese temporarily and
      * removes seeds from the player's inventory and visually
      * from the game screen.
      */
 
-    void useItem() {
-        changeTarget(Player.hitbox, 3000);
+    public void useItem(Player player) {
+        // TODO Need to call changeTarget on each individual goose
+        //  E.g. below would likely work
+
+        for (Goose goose : Goose.gooseList) {
+            goose.changeTarget(player.hitbox,3000);
+        }
+
         // also changeSpeed?
 
         this.inInventory = false;
-        this.texture = null;
-        Player.inventory[0] = null;
-
+        player.inventory.remove(this);
     }
-    
+
 }

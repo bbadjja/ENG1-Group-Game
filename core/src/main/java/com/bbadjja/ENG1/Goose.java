@@ -29,7 +29,7 @@ public class Goose {
     private void movement() {
         // Geese should move constantly at x speed towards their set target
 
-        // 
+        //
 
         hitBox.set(sprite.getX(), sprite.getY(),
             sprite.getWidth(), sprite.getHeight());
@@ -39,7 +39,7 @@ public class Goose {
      * This method changes the targets of all geese to a different one for a
      * set amount of milliseconds before returning it to its original target
      * of the player. It is used for when items such as Seeds are used.
-     * 
+     *
      * @param tempTarget where the geese's target is temporarily changed to
      * @param time how long the tempTarget should be kept for in milliseconds
      */
@@ -49,26 +49,31 @@ public class Goose {
             goose.target = tempTarget;
         }
 
-        try {
-            Thread.sleep(time);
-        }
-        catch (Exception e) {
-            System.out.println(e);
-        }
+        // TODO instead of this do a call to System.currentTimeMillis()
+        //  and save this to a variable. Then add to the movement method a way
+        //  to check if current time > this time + 3 second. If so, reset
+        //  target to player hitbox.
 
-        for(Goose goose : gooseList) {
-            goose.target = calculateTarget();
-        }
+//        try {
+//            Thread.sleep(time);
+//        }
+//        catch (Exception e) {
+//            System.out.println(e);
+//        }
+//
+//        for(Goose goose : gooseList) {
+//            goose.target = calculateTarget();
+//        }
     }
 
     /**
-     * This method changes the speed of every Goose instance for a 
+     * This method changes the speed of every Goose instance for a
      * fixed amount of time. The change can be either an increase
-     * or decrease. 
-     * 
+     * or decrease.
+     *
      * @param amount how much the speed should be changed by, can
      * be either a positive or negative value
-     * @param time how long in milliseconds the speed should be 
+     * @param time how long in milliseconds the speed should be
      * altered for
      */
 
@@ -94,11 +99,10 @@ public class Goose {
         return new Rectangle();
     }
 
-    private void onPlayerCollision() {
+    private void onPlayerCollision(Player player) {
         // when the player's hitbox overlaps with any of the geese hitboxes
         // decrement player health
-
-        Player.health = Player.health - 5;
+        player.changeHealth(-5);
     }
 
 }

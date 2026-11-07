@@ -85,7 +85,7 @@ public class Player{
      * @param slot the slot where the item resides in inventory, zero-indexed
      */
     public void useItem(int slot) {
-        inventory.get(slot).onUse();
+        inventory.get(slot).useItem(this);
         GameLogic.itemsUsed++;
     }
 
@@ -115,6 +115,9 @@ public class Player{
      */
     public void changeHealth(int amount) {
         health += amount;
+        if (health > 100) {
+            health = 100;
+        }
     }
 
     public float getHealth() {
