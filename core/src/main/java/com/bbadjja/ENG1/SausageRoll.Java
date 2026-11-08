@@ -32,6 +32,7 @@ class SausageRoll extends Item {
         this.itemID = generateItemID("1",itemNumber);
     }
 
+    @Override
     public void useItem(Player player) {
         player.changeHealth(15);
         this.inInventory = false;

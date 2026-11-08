@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
-import java.util.concurrent.TimeUnit;
 
 public class Goose {
     Texture texture;
@@ -82,7 +81,14 @@ public class Goose {
             goose.speed = goose.speed + amount;
         }
 
-        try {
+        /**
+        TODO instead of this do a call to System.currentTimeMillis()
+        and save this to a variable. Then add to the movement method a way
+        to check if current time > this time + 3 second. If so, reset
+        target to player hitbox.
+
+
+         try {
             Thread.sleep(time);
         }
         catch (Exception e) {
@@ -92,9 +98,10 @@ public class Goose {
         for(Goose goose : gooseList) {
             goose.speed = 1; // whatever is abritrary speed
         }
+         */
     }
 
-    private Rectangle calculateTarget() {
+    private Rectangle calculateTarget(Player player) {
         // calculate target based on player location
         return new Rectangle();
     }

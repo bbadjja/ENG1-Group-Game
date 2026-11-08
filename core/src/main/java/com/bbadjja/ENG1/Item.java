@@ -55,9 +55,11 @@ public abstract class Item {
         // Set sprite x and y to the parameters x and y
     }
 
-    public void pickUpItem() {
-        this.inInventory = true;
-        // something to remove sprite from map
+    public void pickUpItem(Player player) {
+        if(player.pickupItem(this)) {
+            this.inInventory = true;
+            this.sprite = null;
+        }
     }
 
 }
