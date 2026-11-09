@@ -10,16 +10,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 /** First screen of the application. Displayed after the application is created. */
 public class GameScreen implements Screen {
-    final Main game;
-    Player player;
     private final Texture BACKGROUND = new Texture("map_temp.png");
-    private final Texture HEALTH = new Texture("health.png");
+    private final Texture HEALTH_BAR = new Texture("health.png");
+
+    public final Main game;
+    public Player player;
 
     // width and height of screen in game units I.e. independent of window size
-    float worldWidth;
-    float worldHeight;
+    private float worldWidth;
+    private float worldHeight;
 
-    Matrix4 fixedMatrix;
+    private Matrix4 fixedMatrix;
 
     /**
      * The screen on which the game is displayed
@@ -90,7 +91,7 @@ public class GameScreen implements Screen {
 
         // Calculates health
         Rectangle healthBar = getHealthBarRect();
-        game.batch.draw(HEALTH,healthBar.x,healthBar.y,healthBar.width,healthBar.height);
+        game.batch.draw(HEALTH_BAR,healthBar.x,healthBar.y,healthBar.width,healthBar.height);
 
         for (Goose goose : Goose.gooseList) {
             goose.sprite.draw(game.batch);
@@ -165,6 +166,11 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         BACKGROUND.dispose();
+        HEALTH_BAR.dispose();
         player.sprite.getTexture().dispose();
+
+        for (Goose goose : Goose.gooseList) {
+            goose.sprite.getTexture().dispose();
+        }
     }
 }

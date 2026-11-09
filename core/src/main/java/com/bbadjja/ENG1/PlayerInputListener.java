@@ -4,7 +4,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 
 public class PlayerInputListener extends InputAdapter {
-    Player player;
+    private Player player;
 
     /**
      * A Listener which handles any inputs relating to the {@code player}

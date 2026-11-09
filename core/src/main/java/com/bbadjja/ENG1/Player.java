@@ -13,18 +13,17 @@ import java.util.Set;
 
 public class Player{
     private final Texture TEXTURE = new Texture("char_temp.png");
-    public final float MAX_HEALTH = 100.0f;
-
-    Sprite sprite;
-    Rectangle hitbox;
-    List<Item> inventory;
-    private float health;
-    private int movementSpeed;
-    boolean hidden;
-
+    public final int MAX_HEALTH = 100;
     private final int INVENTORY_SIZE = 5;
 
-    Set<Integer> currentInputs;
+    public Sprite sprite;
+    public Rectangle hitbox;
+    public List<Item> inventory;
+    public boolean hidden;
+    public Set<Integer> currentInputs;
+
+    private int health;
+    private int movementSpeed;
 
     /**
      * Creates a {@code Player} which can move and interact with other entities
@@ -32,7 +31,7 @@ public class Player{
     public Player() {
         sprite = new Sprite(TEXTURE);
         sprite.setSize(1,1);
-        hitbox = new Rectangle();
+        hitbox = sprite.getBoundingRectangle(); // can adjust width and height if necessary
         inventory = new ArrayList<>(INVENTORY_SIZE);
         health = MAX_HEALTH;
         movementSpeed = 5; // TODO Decide on start movementSpeed
@@ -43,7 +42,7 @@ public class Player{
     /**
      * Instantiates the player's initial items and fills the inventory with them
      */
-    private void fillInventory() {
+    private void addInitialItems() {
         // TODO Initialise initial items and place into inventory
         //  E.g. inventory.set(0,Seed());
     }
@@ -76,7 +75,7 @@ public class Player{
         sprite.setX(sprite.getX()+velocity.x);
         sprite.setY(sprite.getY()+velocity.y);
 
-        hitbox.set(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+        hitbox = sprite.getBoundingRectangle(); // can adjust width and height if necessary
     }
 
     /**
@@ -89,6 +88,8 @@ public class Player{
         GameLogic.itemsUsed++;
     }
 
+
+    // TODO might have moved to Item class
     /**
      * Attempts to pick up an item the player has collided with
      *

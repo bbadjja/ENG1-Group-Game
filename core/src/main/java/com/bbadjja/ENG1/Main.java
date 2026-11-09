@@ -23,9 +23,9 @@ public class Main extends Game {
         this.setScreen(new GameScreen(this));
     }
 
-    public void render(){
-        super.render();
-    }
+//    public void render(){
+//        super.render();
+//    }
 
     /**
      * Called when the game is closed, disposes all game elements
