@@ -46,8 +46,6 @@ public class GameLogic {
                 displayTime = getDisplayTime(timeRemaining);
             }
         }
-        // TODO do we want the camera to always be centered on the player or
-        //  follow behind slightly, catching up when the player stops
 
         // Centers Camera on player
         float playerX = screen.player.sprite.getX();
