@@ -30,7 +30,6 @@ public class SausageRoll extends Item {
     public void useItem(Player player) {
         player.changeHealth(15);
         this.inInventory = false;
-        player.inventory.remove(this);
     }
 
 }

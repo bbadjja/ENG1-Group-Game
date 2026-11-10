@@ -33,7 +33,6 @@ public class Seeds extends Item {
         // also changeSpeed?
 
         this.inInventory = false;
-        player.inventory.remove(this);
     }
 
 }
