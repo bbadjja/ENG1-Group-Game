@@ -20,7 +20,6 @@ public class GameLogic {
      */
     public static void togglePause() {
         isPaused = !isPaused;
-        // Add calls to other Classes with pause / onPause methods etc?
         if (!isPaused) {
             timePaused += System.currentTimeMillis() - pauseStart;
         } else {
@@ -86,7 +85,7 @@ public class GameLogic {
         String runTime = getDisplayTime(FIVE_MINUTES - timeRemaining);
 
         // TODO Temporary - need permanent way to show end of game
-        //  E.g. switch screen to screen that just says you lose/win
+        //  E.g. display overlay saying Game Over /n You Win/Lose
         GameLogic.togglePause();
     }
 }
