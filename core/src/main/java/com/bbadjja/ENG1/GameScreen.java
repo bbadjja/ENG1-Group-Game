@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 /** First screen of the application. Displayed after the application is created. */
@@ -18,10 +16,8 @@ public class GameScreen implements Screen {
     public Player player;
 
     // width and height of screen in game units I.e. independent of window size
-    private float worldWidth;
-    private float worldHeight;
-
-    private Matrix4 fixedMatrix;
+    private float screenWidth;
+    private float screenHeight;
 
     /**
      * The screen on which the game is displayed
@@ -31,19 +27,13 @@ public class GameScreen implements Screen {
     public GameScreen(final Main game) {
         this.game = game;
 
-        worldWidth = game.viewport.getMinWorldWidth();
-        worldHeight = game.viewport.getMinWorldHeight();
-
-        fixedMatrix = game.viewport.getCamera().combined.cpy();
-        fixedMatrix.setToOrtho2D(0, 0, worldWidth, worldHeight);
-
         player = new Player();
-        player.sprite.setCenter(worldWidth/2,worldHeight/2);
+        player.sprite.setCenter(0,0); // This is now center
         Gdx.input.setInputProcessor(new PlayerInputListener(player));
 
         // TODO temp remove this
         Goose testGoose = new Goose();
-        testGoose.sprite.setX(-2);
+        testGoose.sprite.setCenter(player.sprite.getX()-4,player.sprite.getY());
     }
 
     /**
@@ -79,11 +69,13 @@ public class GameScreen implements Screen {
         game.batch.begin();
 
         // Alters coordinates to be fixed - I.e. (0,0) = bottom left
-        game.batch.setProjectionMatrix(fixedMatrix);
-        // Draws the background fixed position
-        game.batch.draw(BACKGROUND, 0, 0, worldWidth, worldHeight);
+        game.fixedViewport.apply();
+        game.batch.setProjectionMatrix(game.fixedViewport.getCamera().combined);
+
+        game.batch.draw(BACKGROUND, 0, 0, screenWidth, screenHeight);
 
         // Alters coordinates to be based on camera position
+        game.viewport.apply();
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
         player.sprite.draw(game.batch);
@@ -171,8 +163,8 @@ public class GameScreen implements Screen {
         game.viewport.update(width, height, false);
         game.fixedViewport.update(width,height,true);
 
-        worldWidth = game.viewport.getMinWorldWidth();
-        worldHeight = game.viewport.getMinWorldHeight();
+        screenWidth = game.fixedViewport.getCamera().viewportWidth;
+        screenHeight = game.fixedViewport.getCamera().viewportHeight;
 
         // Prevents inputs getting stuck when resizing the window
         player.currentInputs.clear();
