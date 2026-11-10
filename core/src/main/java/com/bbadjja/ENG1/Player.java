@@ -84,7 +84,9 @@ public class Player{
      */
     public void useItem(int slot) {
         if (slot < inventory.size()) {
-            inventory.get(slot).useItem(this);
+            Item item = inventory.get(slot);
+            item.useItem(this);
+            inventory.remove(item);
             GameLogic.itemsUsed++;
         }
     }
