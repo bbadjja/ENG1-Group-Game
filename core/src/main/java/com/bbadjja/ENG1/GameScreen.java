@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 /** First screen of the application. Displayed after the application is created. */
 public class GameScreen implements Screen {
     private final Texture BACKGROUND = new Texture("map_temp.png");
+    private final Texture INVENTORY_SLOT = new Texture("inventory_slot.png");
     private final Texture HEALTH_BAR = new Texture("health.png");
 
     public final Main game;
@@ -79,39 +80,80 @@ public class GameScreen implements Screen {
 
         // Alters coordinates to be fixed - I.e. (0,0) = bottom left
         game.batch.setProjectionMatrix(fixedMatrix);
-        // Draws the background and HUD at fixed positions
+        // Draws the background fixed position
         game.batch.draw(BACKGROUND, 0, 0, worldWidth, worldHeight);
-
-        // TODO Draw timer onto screen - GameLogic.displayTime
 
         // Alters coordinates to be based on camera position
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
         player.sprite.draw(game.batch);
-
-        // Calculates health
-        Rectangle healthBar = getHealthBarRect();
-        game.batch.draw(HEALTH_BAR,healthBar.x,healthBar.y,healthBar.width,healthBar.height);
+        drawHealthBar();
 
         for (Goose goose : Goose.gooseList) {
             goose.sprite.draw(game.batch);
         }
 
+        drawHUD();
+
         game.batch.end();
     }
 
     /**
-     * Convenience method for calculating the coords and size of the healthBar
-     *
-     * @return the rectangle containing the x, y, width and height of healthBar
+     * Convenience method for drawing the healthBar
      */
-    private Rectangle getHealthBarRect() {
+    private void drawHealthBar() {
         float healthWidth = 1.5f * (player.getHealth() / player.MAX_HEALTH);
         float healthHeight = 0.25f;
         float healthBarX = player.sprite.getX() + player.sprite.getWidth()/2 - healthWidth/2;
         float healthBarY = player.sprite.getY()-(healthHeight+0.25f);
 
-        return new Rectangle(healthBarX,healthBarY,healthWidth,healthHeight);
+        game.batch.draw(HEALTH_BAR,healthBarX,healthBarY,healthWidth,healthHeight);
+    }
+
+    /**
+     * Convenience method for drawing the HUD
+     */
+    private void drawHUD() {
+        game.fixedViewport.apply();
+        game.batch.setProjectionMatrix(game.fixedViewport.getCamera().combined);
+
+        drawInventory();
+        drawTimer();
+    }
+
+    /**
+     * Convenience method for drawing the inventory
+     */
+    private void drawInventory() {
+        float screenWidth = game.fixedViewport.getCamera().viewportWidth;
+
+        float size = 0.5f;
+        float x = (screenWidth - ((size +0.05f)* 5)) /2 ;
+        float y = 0.25f;
+
+        float itemSize = size*0.8f;
+
+        for (int slot = 0; slot < player.INVENTORY_SIZE; slot++) {
+            game.batch.draw(INVENTORY_SLOT,x,y,size,size);
+            // TODO one potential way to display items in inventory
+
+            if (slot < player.inventory.size()) {
+                float itemX = x + (size-itemSize)/2;
+                float itemY = y + (size-itemSize)/2;
+                game.batch.draw(player.inventory.get(slot).sprite.getTexture(),itemX,itemY,itemSize,itemSize);
+            }
+
+            x += size + 0.05f;
+        }
+
+        game.viewport.apply();
+    }
+
+    /**
+     * Convenience method for drawing the timer
+     */
+    private void drawTimer() {
+        // TODO Draw timer onto screen - GameLogic.displayTime
     }
 
     /**
@@ -127,6 +169,7 @@ public class GameScreen implements Screen {
         if(width <= 0 || height <= 0) return;
 
         game.viewport.update(width, height, false);
+        game.fixedViewport.update(width,height,true);
 
         worldWidth = game.viewport.getMinWorldWidth();
         worldHeight = game.viewport.getMinWorldHeight();

@@ -1,10 +1,8 @@
 package com.bbadjja.ENG1;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Rectangle;
 
-class Seeds extends Item {
+public class Seeds extends Item {
     private static int itemNumber = 0;
     private final static Texture TEXTURE = new Texture("char_temp.png");
 

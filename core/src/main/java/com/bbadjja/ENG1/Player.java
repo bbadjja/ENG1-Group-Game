@@ -6,19 +6,16 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Player{
     private final Texture TEXTURE = new Texture("char_temp.png");
     public final int MAX_HEALTH = 100;
-    private final int INVENTORY_SIZE = 5;
+    public final int INVENTORY_SIZE = 5;
 
     public Sprite sprite;
     public Rectangle hitbox;
-    public List<Item> inventory;
+    public ArrayList<Item> inventory;
     public boolean hidden;
     public Set<Integer> currentInputs;
 
@@ -37,14 +34,16 @@ public class Player{
         movementSpeed = 5; // TODO Decide on start movementSpeed
         hidden = false;
         currentInputs = new HashSet<>();
+
+        addInitialItems();
     }
 
     /**
      * Instantiates the player's initial items and fills the inventory with them
      */
-    private void addInitialItems() {
-        // TODO Initialise initial items and place into inventory
-        //  E.g. inventory.set(0,Seed());
+    public void addInitialItems() {
+        inventory.add(0,new Seeds(true));
+        inventory.add(1,new SausageRoll(true));
     }
 
     /**
@@ -84,10 +83,11 @@ public class Player{
      * @param slot the slot where the item resides in inventory, zero-indexed
      */
     public void useItem(int slot) {
-        inventory.get(slot).useItem(this);
-        GameLogic.itemsUsed++;
+        if (slot < inventory.size()) {
+            inventory.get(slot).useItem(this);
+            GameLogic.itemsUsed++;
+        }
     }
-
 
     // TODO might have moved to Item class
     /**
@@ -100,13 +100,16 @@ public class Player{
         // TODO Called by GameScreen / GameLogic when player's hitbox collides with
         //  item's hitbox/location?
 
-        if (inventory.size() == INVENTORY_SIZE) {
+        if (inventoryFull()) {
             return false;
         } else {
             inventory.add(item);
             return true;
         }
+    }
 
+    public boolean inventoryFull() {
+        return inventory.size() < INVENTORY_SIZE;
     }
 
     /**
