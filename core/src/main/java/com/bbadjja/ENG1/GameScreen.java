@@ -84,9 +84,6 @@ public class GameScreen implements Screen {
         game.viewport.apply();
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
-        player.sprite.draw(game.batch);
-        drawHealthBar();
-
         for (Goose goose : Goose.gooseList) {
             goose.sprite.draw(game.batch);
         }
@@ -97,6 +94,9 @@ public class GameScreen implements Screen {
             }
 
         }
+
+        player.sprite.draw(game.batch);
+        drawHealthBar();
 
         drawHUD();
 
@@ -130,6 +130,7 @@ public class GameScreen implements Screen {
 
         drawInventory();
         drawTimer();
+        drawScoreValues();
         if (GameLogic.isPaused) {
            drawPauseMessage();
         }
@@ -173,6 +174,18 @@ public class GameScreen implements Screen {
         game.GLYPH_LAYOUT.setText(game.font,GameLogic.displayTime);
         float textWidth = game.GLYPH_LAYOUT.width;
         game.font.draw(game.batch,GameLogic.displayTime,screenWidth-textWidth,screenHeight);
+    }
+
+    /**
+     * Convenience method for drawing items used and events triggered
+     */
+    private void drawScoreValues() {
+        String message1 = "Items Used: " + GameLogic.itemsUsed;
+        String message2 = "Events Triggered: " + GameLogic.eventsTriggered;
+        game.GLYPH_LAYOUT.setText(game.font,message1);
+        float textHeight = game.GLYPH_LAYOUT.height;
+        game.font.draw(game.batch,message1,0,screenHeight);
+        game.font.draw(game.batch,message2,0,screenHeight-(textHeight+5));
     }
 
     /**
@@ -255,5 +268,3 @@ public class GameScreen implements Screen {
         }
     }
 }
-
-// TODO - display item and event counter - top left?

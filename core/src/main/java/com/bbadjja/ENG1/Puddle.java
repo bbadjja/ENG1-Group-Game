@@ -26,6 +26,7 @@ public class Puddle extends Event{
     public void onTrigger(Player player) {
         player.changeHealth(-damage);
         // TODO make player slip
+        GameLogic.eventsTriggered++;
     }
 
     @Override

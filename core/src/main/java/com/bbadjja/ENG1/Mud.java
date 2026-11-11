@@ -33,5 +33,6 @@ public class Mud extends Event{
     @Override
     public void onTrigger(Player player) {
         player.applySpeedPercentage(speedPercent);
+        GameLogic.eventsTriggered++;
     }
 }

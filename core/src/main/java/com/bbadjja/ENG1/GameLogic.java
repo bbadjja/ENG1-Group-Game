@@ -11,6 +11,7 @@ public class GameLogic {
     public static boolean isPaused = false;
     public static int score = 0;
     public static int itemsUsed = 0;
+    public static int eventsTriggered = 0;
 
     // All times in milliseconds for consistency, except displayTime
     public static long startTime;
