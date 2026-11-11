@@ -3,6 +3,8 @@ package com.bbadjja.ENG1;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import java.util.Random;
+//import java.util.random.*;
 
 public abstract class Item {
     Sprite sprite;
@@ -18,7 +20,6 @@ public abstract class Item {
         this.name = name;
         this.inInventory = inInventory;
         sprite = new Sprite(texture);
-        sprite.setSize(1, 1);
         hitbox = sprite.getBoundingRectangle();
         
 
@@ -28,7 +29,7 @@ public abstract class Item {
         //  the super constructor
 
         if (!inInventory) {
-            placeOnMap(this.initialPlacement);
+            this.initialPlacement = placeOnMap();
         }
 
     }
@@ -52,30 +53,30 @@ public abstract class Item {
 
     public abstract void useItem(Player player, Goose goose);
 
-    public void placeOnMap(Rectangle placement) {
-        // This should not be abstract as same code for all items
-        // Just place in a position, coords x and y
+    public Rectangle placeOnMap() {
+
+        Random r = new Random();
+        float x = 0 + r.nextFloat() * 5000;
+        float y = 0 + r.nextFloat() * 5000;
 
         // Set sprite x and y to the parameters x and y
+        this.sprite.setSize(1, 1);
+        return(new Rectangle(x, y, 1, 1));
     }
 
     // call every frame/second in the render
     public boolean pickUpItem(Player player) {
-
-        // TODO Called by GameScreen / GameLogic when player's hitbox collides with
-        //  item's hitbox/location?
-
-
-        if(player.inventory.size() == 5) {
-            return false;
-        } else {
-            this.inInventory = true;
-            this.sprite = null;
-            player.inventory.add(this);
-            return true;
+        if((player.hitbox).overlaps(this.hitbox)) {
+            if(player.inventory.size() == 5) {
+                return false;
+            } else {
+                this.inInventory = true;
+                this.sprite = null;
+                player.inventory.add(this);
+                return true;
+            }
         }
-
-
+        return false;
     }
 
 }

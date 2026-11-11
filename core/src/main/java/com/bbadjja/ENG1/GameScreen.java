@@ -16,7 +16,7 @@ public class GameScreen implements Screen {
     private final Texture HEALTH = new Texture("health.png");
 
     // width and height of screen in game units I.e. independent of window size
-    float worldWidth;
+    static float worldWidth;
     float worldHeight;
 
     Matrix4 fixedMatrix;
