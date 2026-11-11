@@ -90,25 +90,6 @@ public class Player{
     }
 
     /**
-     * Attempts to pick up an item the player has collided with
-     *
-     * @param item the item to be picked up
-     * @return whether the item could be picked up, false if inventory is full
-     */
-    public boolean pickupItem(Item item) {
-        // TODO Called by GameScreen / GameLogic when player's hitbox collides with
-        //  item's hitbox/location?
-
-        if (inventory.size() == INVENTORY_SIZE) {
-            return false;
-        } else {
-            inventory.add(item);
-            return true;
-        }
-
-    }
-
-    /**
      * Changes the player's health
      *
      * @param amount the amount to change the health by, can be negative
