@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 /** First screen of the application. Displayed after the application is created. */
@@ -20,6 +21,9 @@ public class GameScreen implements Screen {
     // width and height of screen in game units I.e. independent of window size
     private float screenWidth;
     private float screenHeight;
+
+    private Texture temp_hitbox_texture = new Texture("char_temp.png");
+    private Texture temp_hitbox_texture2 = new Texture("goose_temp.png");
 
     /**
      * The screen on which the game is displayed
@@ -70,6 +74,9 @@ public class GameScreen implements Screen {
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
 
+        // TODO temp remove
+        Rectangle testRectangle;
+
         game.viewport.apply();
         game.batch.begin();
 
@@ -86,16 +93,28 @@ public class GameScreen implements Screen {
 
         for (Goose goose : Goose.gooseList) {
             goose.sprite.draw(game.batch);
+
+            testRectangle = goose.sprite.getBoundingRectangle();
+            game.batch.draw(temp_hitbox_texture2,testRectangle.getX(),testRectangle.getY(),testRectangle.getWidth(),testRectangle.getHeight());
         }
 
-        for (Event event : Event.events) {
+        for (Event event : Event.eventList) {
             if (event.sprite != null) {
                 event.sprite.draw(game.batch);
+
+                testRectangle = event.triggerArea;
+                game.batch.draw(temp_hitbox_texture2,testRectangle.getX(),testRectangle.getY(),testRectangle.getWidth(),testRectangle.getHeight());
             }
 
         }
 
         player.sprite.draw(game.batch);
+
+        testRectangle = player.hitbox;
+        game.batch.draw(temp_hitbox_texture2,testRectangle.getX(),testRectangle.getY(),testRectangle.getWidth(),testRectangle.getHeight());
+        testRectangle = player.feetHitbox;
+        game.batch.draw(temp_hitbox_texture,testRectangle.getX(),testRectangle.getY(),testRectangle.getWidth(),testRectangle.getHeight());
+
         drawHealthBar();
 
         drawHUD();

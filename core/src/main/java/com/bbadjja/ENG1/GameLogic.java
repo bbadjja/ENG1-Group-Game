@@ -70,11 +70,18 @@ public class GameLogic {
 
     public static void handleCollisions(GameScreen screen) {
         if (!isPaused) {
-            for (Event event : Event.events) {
+            for (Event event : Event.eventList) {
                 if (event.sprite != null) {
                     Sprite sprite = event.sprite;
-                    Rectangle eventHitbox = sprite.getBoundingRectangle();
-                    if (eventHitbox.overlaps(screen.player.hitbox)) {
+                    Rectangle eventHitbox = event.triggerArea;
+                    Rectangle playerHitbox;
+                    if (event instanceof Puddle || event instanceof Mud) {
+                        playerHitbox = screen.player.feetHitbox;
+                    } else {
+                        playerHitbox = screen.player.hitbox;
+                    }
+
+                    if (eventHitbox.overlaps(playerHitbox)) {
                         if (!currentEvents.contains(event)) {
                             event.onPlayerEnter(screen.player);
                             currentEvents.add(event);
@@ -85,10 +92,18 @@ public class GameLogic {
                     }
                 }
             }
+
             for (Goose goose : Goose.gooseList) {
                 // Can replace with goose.hitbox later
                 if (goose.sprite.getBoundingRectangle().overlaps(screen.player.hitbox)) {
                     goose.onPlayerCollision(screen.player);
+                }
+            }
+
+            // TODO might need to change this depending on how Item class works
+            for (Item item : Item.itemList) {
+                if (item.sprite.getBoundingRectangle().overlaps(screen.player.hitbox)) {
+                    screen.player.pickupItem(item);
                 }
             }
         }

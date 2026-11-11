@@ -11,14 +11,14 @@ public class Mud extends Event{
     private static int eventNum = 0;
     private static final List<Rectangle> positions = List.of(
         new Rectangle(-3,-3,1,1),
-        new Rectangle(-5,-5,1,1)
+        new Rectangle(-5,-10,3,3)
     );
     public final static int mudCount = positions.size();
 
     private float speedPercent;
 
     public Mud() {
-        super("Puddle",positions.get(eventNum),false,TEXTURE);
+        super("Mud",positions.get(eventNum),false,TEXTURE);
         eventNum++;
 
         Random r = new Random();

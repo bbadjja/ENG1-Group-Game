@@ -16,9 +16,12 @@ public class Player{
 
     public Sprite sprite;
     public Rectangle hitbox;
+    public Rectangle feetHitbox;
     public ArrayList<Item> inventory;
     public boolean hidden;
+    public boolean slipping;
     public Set<Integer> currentInputs;
+    public Set<Integer> slippingInputs = new HashSet<>();
 
     private int health;
     private float movementSpeed;
@@ -30,7 +33,12 @@ public class Player{
     public Player() {
         sprite = new Sprite(TEXTURE);
         sprite.setSize(1,1);
-        hitbox = sprite.getBoundingRectangle(); // can adjust width and height if necessary
+
+        // Update hitboxes to fit inside texture
+        // feetHitbox for collisions with ground objects e.g. Puddle/Mud
+        hitbox = new Rectangle(sprite.getX()+0.25f,sprite.getY()+0.15f,sprite.getWidth()-0.5f,sprite.getHeight()-0.1f);
+        feetHitbox = new Rectangle(sprite.getX()+0.25f,sprite.getY()+0.15f,sprite.getWidth()-0.5f,sprite.getHeight()-0.7f);
+
         inventory = new ArrayList<>(INVENTORY_SIZE);
         health = MAX_HEALTH;
         movementSpeed = NORMAL_SPEED;
@@ -57,18 +65,40 @@ public class Player{
     public void move(float delta) {
         float scaledSpeed = movementSpeed * delta;
         Vector2 direction = new Vector2(0,0);
+        Set<Integer> inputs;
 
-        if (currentInputs.contains(Input.Keys.RIGHT)) {
+        if (slipping) {
+            inputs = slippingInputs;
+        } else {
+            inputs = currentInputs;
+        }
+
+        if (inputs.contains(Input.Keys.RIGHT)) {
             direction.x += 1;
         }
-        if (currentInputs.contains(Input.Keys.LEFT)) {
+        if (inputs.contains(Input.Keys.LEFT)) {
             direction.x -= 1;
         }
-        if (currentInputs.contains(Input.Keys.UP)) {
+        if (inputs.contains(Input.Keys.UP)) {
             direction.y += 1;
         }
-        if (currentInputs.contains(Input.Keys.DOWN)) {
+        if (inputs.contains(Input.Keys.DOWN)) {
             direction.y -= 1;
+        }
+
+        if (slipping) {
+            Random r = new Random();
+            if (direction.x >= 0) {
+                direction.x += 0.2f + r.nextFloat() * (0.3f-0.2f);
+            } else {
+                direction.x -= 0.2f + r.nextFloat() * (0.3f-0.2f);
+            }
+
+            if (direction.y >= 0) {
+                direction.y += 0.2f + r.nextFloat() * (0.3f-0.2f);
+            } else {
+                direction.y -= 0.2f + r.nextFloat() * (0.3f-0.2f);
+            }
         }
 
         // Allows diagonal movement and prevents this being faster than normal
@@ -77,7 +107,10 @@ public class Player{
         sprite.setX(sprite.getX()+velocity.x);
         sprite.setY(sprite.getY()+velocity.y);
 
-        hitbox = sprite.getBoundingRectangle(); // can adjust width and height if necessary
+        hitbox.x = sprite.getX()+0.25f;
+        hitbox.y = sprite.getY()+0.1f;
+        feetHitbox.x = sprite.getX()+0.25f;
+        feetHitbox.y = sprite.getY()+0.1f;
     }
 
     /**

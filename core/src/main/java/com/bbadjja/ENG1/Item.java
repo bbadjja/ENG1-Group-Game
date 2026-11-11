@@ -4,12 +4,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public abstract class Item {
     Sprite sprite;
     String itemID; // can easily be changed to integer if needed - ask Amber
     String name;
     boolean inInventory;
     Rectangle initialPlacement;
+
+    public static ArrayList<Item> itemList = new ArrayList<>();
 
     // constructor
     public Item(String name, Texture texture, boolean inInventory, Rectangle initialPlacement) {
@@ -25,8 +30,8 @@ public abstract class Item {
 
         if (!inInventory) {
             placeOnMap(this.initialPlacement);
+            itemList.add(this);
         }
-
     }
 
     /**
