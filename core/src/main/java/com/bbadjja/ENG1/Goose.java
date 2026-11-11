@@ -16,7 +16,7 @@ public class Goose {
     static ArrayList<Goose> gooseList = new ArrayList<>();
 
     public Goose() {
-        texture = new Texture("goose_temp.png");
+        texture = new Texture("goose.png");
         sprite = new Sprite(texture);
         sprite.setSize(1, 1);
         hitBox = new Rectangle();
@@ -99,7 +99,7 @@ public class Goose {
         return new Rectangle();
     }
 
-    private void onPlayerCollision(Player player) {
+    public void onPlayerCollision(Player player) {
         // when the player's hitbox overlaps with any of the geese hitboxes
         // decrement player health
         player.changeHealth(-5);

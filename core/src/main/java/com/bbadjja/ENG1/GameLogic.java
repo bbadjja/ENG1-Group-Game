@@ -1,5 +1,10 @@
 package com.bbadjja.ENG1;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
+
+import java.util.ArrayList;
+
 public class GameLogic {
     private static final int FIVE_MINUTES = 5 * 60 * 1000;
 
@@ -14,13 +19,13 @@ public class GameLogic {
     private static long timePaused = 0;
 
     public static String displayTime = "5:00";
+    public static ArrayList<Event> currentEvents = new ArrayList<>();
 
     /**
      * Toggles the state of game execution between paused and unpaused
      */
     public static void togglePause() {
         isPaused = !isPaused;
-        // Add calls to other Classes with pause / onPause methods etc?
         if (!isPaused) {
             timePaused += System.currentTimeMillis() - pauseStart;
         } else {
@@ -47,8 +52,6 @@ public class GameLogic {
                 displayTime = getDisplayTime(timeRemaining);
             }
         }
-        // TODO do we want the camera to always be centered on the player or
-        //  follow behind slightly, catching up when the player stops
 
         // Centers Camera on player
         float playerX = screen.player.sprite.getX();
@@ -56,6 +59,32 @@ public class GameLogic {
         float offsetX = screen.player.sprite.getWidth()/2;
         float offsetY = screen.player.sprite.getHeight()/2;
         screen.game.viewport.getCamera().position.set(playerX+offsetX,playerY+offsetY,0);
+    }
+
+    public static void handleCollisions(GameScreen screen) {
+        if (!isPaused) {
+            for (Event event : Event.events) {
+                if (event.sprite != null) {
+                    Sprite sprite = event.sprite;
+                    Rectangle eventHitbox = sprite.getBoundingRectangle();
+                    if (eventHitbox.overlaps(screen.player.hitbox)) {
+                        if (!currentEvents.contains(event)) {
+                            event.onPlayerEnter(screen.player);
+                            currentEvents.add(event);
+                        }
+                    } else if (currentEvents.contains(event)) {
+                        event.onPlayerExit(screen.player);
+                        currentEvents.remove(event);
+                    }
+                }
+            }
+            for (Goose goose : Goose.gooseList) {
+                // Can replace with goose.hitbox later
+                if (goose.sprite.getBoundingRectangle().overlaps(screen.player.hitbox)) {
+                    goose.onPlayerCollision(screen.player);
+                }
+            }
+        }
     }
 
     /**
@@ -86,7 +115,7 @@ public class GameLogic {
         String runTime = getDisplayTime(FIVE_MINUTES - timeRemaining);
 
         // TODO Temporary - need permanent way to show end of game
-        //  E.g. switch screen to screen that just says you lose/win
+        //  E.g. display overlay saying Game Over /n You Win/Lose
         GameLogic.togglePause();
     }
 }

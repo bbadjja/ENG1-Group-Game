@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 /** First screen of the application. Displayed after the application is created. */
@@ -11,6 +12,7 @@ public class GameScreen implements Screen {
     private final Texture BACKGROUND = new Texture("map_temp.png");
     private final Texture INVENTORY_SLOT = new Texture("inventory_slot.png");
     private final Texture HEALTH_BAR = new Texture("health.png");
+    private final Texture TEXT_BACKGROUND = new Texture("textBackground.png");
 
     public final Main game;
     public Player player;
@@ -34,6 +36,8 @@ public class GameScreen implements Screen {
         // TODO temp remove this
         Goose testGoose = new Goose();
         testGoose.sprite.setCenter(player.sprite.getX()-4,player.sprite.getY());
+
+        Event.createEvents();
     }
 
     /**
@@ -56,6 +60,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         GameLogic.update(this,delta);
+        GameLogic.handleCollisions(this);
         draw();
     }
 
@@ -73,6 +78,7 @@ public class GameScreen implements Screen {
         game.batch.setProjectionMatrix(game.fixedViewport.getCamera().combined);
 
         game.batch.draw(BACKGROUND, 0, 0, screenWidth, screenHeight);
+        // TODO draw fence - world limit
 
         // Alters coordinates to be based on camera position
         game.viewport.apply();
@@ -85,6 +91,13 @@ public class GameScreen implements Screen {
             goose.sprite.draw(game.batch);
         }
 
+        for (Event event : Event.events) {
+            if (event.sprite != null) {
+                event.sprite.draw(game.batch);
+            }
+
+        }
+
         drawHUD();
 
         game.batch.end();
@@ -94,7 +107,13 @@ public class GameScreen implements Screen {
      * Convenience method for drawing the healthBar
      */
     private void drawHealthBar() {
-        float healthWidth = 1.5f * (player.getHealth() / player.MAX_HEALTH);
+        float healthWidth;
+        if (player.getHealth() <= 0) {
+            healthWidth = 0;
+        } else {
+            healthWidth = 1.5f * (player.getHealth() / player.MAX_HEALTH);
+        }
+
         float healthHeight = 0.25f;
         float healthBarX = player.sprite.getX() + player.sprite.getWidth()/2 - healthWidth/2;
         float healthBarY = player.sprite.getY()-(healthHeight+0.25f);
@@ -111,17 +130,23 @@ public class GameScreen implements Screen {
 
         drawInventory();
         drawTimer();
+        if (GameLogic.isPaused) {
+           drawPauseMessage();
+        }
     }
 
     /**
      * Convenience method for drawing the inventory
      */
     private void drawInventory() {
-        float screenWidth = game.fixedViewport.getCamera().viewportWidth;
+        int scale = 800/8;
 
-        float size = 0.5f;
-        float x = (screenWidth - ((size +0.05f)* 5)) /2 ;
-        float y = 0.25f;
+        float screenWidth = game.fixedViewport.getCamera().viewportWidth;
+        float spacing = 0.05f * scale;
+
+        float size = 0.5f * scale;
+        float x = (screenWidth - ((5*size) + (4*spacing))) /2;
+        float y = 0.25f * scale;
 
         float itemSize = size*0.8f;
 
@@ -135,7 +160,7 @@ public class GameScreen implements Screen {
                 game.batch.draw(player.inventory.get(slot).sprite.getTexture(),itemX,itemY,itemSize,itemSize);
             }
 
-            x += size + 0.05f;
+            x += size + spacing;
         }
 
         game.viewport.apply();
@@ -145,7 +170,28 @@ public class GameScreen implements Screen {
      * Convenience method for drawing the timer
      */
     private void drawTimer() {
-        // TODO Draw timer onto screen - GameLogic.displayTime
+        game.GLYPH_LAYOUT.setText(game.font,GameLogic.displayTime);
+        float textWidth = game.GLYPH_LAYOUT.width;
+        game.font.draw(game.batch,GameLogic.displayTime,screenWidth-textWidth,screenHeight);
+    }
+
+    /**
+     * Convenience method for drawing the pause message
+     */
+    private void drawPauseMessage() {
+        int scale = 800/8;
+
+        String message = "Press Escape to Unpause.";
+        game.GLYPH_LAYOUT.setText(game.font,message);
+        float textWidth = game.GLYPH_LAYOUT.width;
+        float textHeight = game.GLYPH_LAYOUT.height;
+
+        float x = (screenWidth-textWidth)/2;
+        float y = screenHeight - (screenHeight-textHeight)/2;
+        float padding = (0.2f*scale);
+
+        game.batch.draw(TEXT_BACKGROUND,x-padding/2,y-textHeight-padding/2,textWidth+padding,textHeight+padding);
+        game.font.draw(game.batch,message,x,y);
     }
 
     /**
@@ -209,3 +255,5 @@ public class GameScreen implements Screen {
         }
     }
 }
+
+// TODO - display item and event counter - top left?
