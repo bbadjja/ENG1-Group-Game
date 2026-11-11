@@ -267,10 +267,19 @@ public class GameScreen implements Screen {
     public void dispose() {
         BACKGROUND.dispose();
         HEALTH_BAR.dispose();
+        INVENTORY_SLOT.dispose();
+        TEXT_BACKGROUND.dispose();
         player.sprite.getTexture().dispose();
 
         for (Goose goose : Goose.gooseList) {
             goose.sprite.getTexture().dispose();
         }
+
+        for (Event event : Event.eventList) {
+            event.sprite.getTexture().dispose();
+        }
     }
 }
+
+// TODO choose some spots across the world for puddles and mud patches
+//  add to their position lists and choose different sizes - 2 max proabaly

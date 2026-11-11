@@ -11,7 +11,7 @@ public class Mud extends Event{
     private static int eventNum = 0;
     private static final List<Rectangle> positions = List.of(
         new Rectangle(-3,-3,1,1),
-        new Rectangle(-5,-10,3,3)
+        new Rectangle(-5,-10,2,2)
     );
     public final static int mudCount = positions.size();
 

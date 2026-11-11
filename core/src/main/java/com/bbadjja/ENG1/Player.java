@@ -191,6 +191,4 @@ public class Player{
         return this.movementSpeed;
     }
 
-    // TODO need to fix player hitbox so feels correct
-
 }
