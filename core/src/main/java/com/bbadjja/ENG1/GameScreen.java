@@ -193,8 +193,14 @@ public class GameScreen implements Screen {
      */
     private void drawPauseMessage() {
         int scale = 800/8;
+        String message;
 
-        String message = "Press Escape to Unpause.";
+        if (GameLogic.gameOver) {
+            message = "Game Over";
+        } else {
+            message = "Press Escape to Unpause.";
+        }
+
         game.GLYPH_LAYOUT.setText(game.font,message);
         float textWidth = game.GLYPH_LAYOUT.width;
         float textHeight = game.GLYPH_LAYOUT.height;

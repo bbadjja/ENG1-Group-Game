@@ -22,10 +22,16 @@ public class GameLogic {
     public static String displayTime = "5:00";
     public static ArrayList<Event> currentEvents = new ArrayList<>();
 
+    public static boolean gameOver = false;
+
     /**
      * Toggles the state of game execution between paused and unpaused
      */
     public static void togglePause() {
+        if (gameOver) {
+            return;
+        }
+
         isPaused = !isPaused;
         if (!isPaused) {
             timePaused += System.currentTimeMillis() - pauseStart;
@@ -114,9 +120,7 @@ public class GameLogic {
      */
     public static void endGame(boolean win) {
         String runTime = getDisplayTime(FIVE_MINUTES - timeRemaining);
-
-        // TODO Temporary - need permanent way to show end of game
-        //  E.g. display overlay saying Game Over /n You Win/Lose
         GameLogic.togglePause();
+        gameOver = true;
     }
 }
