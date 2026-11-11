@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.List;
 
 public class Puddle extends Event{
-    private final static Texture TEXTURE = new Texture("char_temp.png");
+    private final static Texture TEXTURE = new Texture("puddle.png");
     private static int eventNum = 0;
     private final static List<Rectangle> positions = List.of(
         new Rectangle(3,3,1,1),

@@ -3,7 +3,6 @@ package com.bbadjja.ENG1;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class GameLogic {

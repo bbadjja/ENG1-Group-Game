@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Mud extends Event{
-    private final static Texture TEXTURE = new Texture("char_temp.png");
+    private final static Texture TEXTURE = new Texture("mud.png");
     private static int eventNum = 0;
     private static final List<Rectangle> positions = List.of(
         new Rectangle(-3,-3,1,1),

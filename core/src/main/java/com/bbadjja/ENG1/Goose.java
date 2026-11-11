@@ -16,7 +16,7 @@ public class Goose {
     static ArrayList<Goose> gooseList = new ArrayList<>();
 
     public Goose() {
-        texture = new Texture("goose_temp.png");
+        texture = new Texture("goose.png");
         sprite = new Sprite(texture);
         sprite.setSize(1, 1);
         hitBox = new Rectangle();

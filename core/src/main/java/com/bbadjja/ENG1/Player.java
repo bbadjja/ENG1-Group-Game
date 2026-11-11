@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.*;
 
 public class Player{
-    private final Texture TEXTURE = new Texture("char_temp.png");
+    private final Texture TEXTURE = new Texture("player_front_idle.png");
     private final int NORMAL_SPEED = 5;
     public final int MAX_HEALTH = 100;
     public final int INVENTORY_SIZE = 5;
@@ -102,8 +102,7 @@ public class Player{
      * @return whether the item could be picked up, false if inventory is full
      */
     public boolean pickupItem(Item item) {
-        // TODO Called by GameScreen / GameLogic when player's hitbox collides with
-        //  item's hitbox/location?
+        // TODO Called by GameLogic when player's hitbox collides with item's hitbox
 
         if (inventoryFull()) {
             return false;
@@ -158,5 +157,7 @@ public class Player{
     public float getSpeed() {
         return this.movementSpeed;
     }
+
+    // TODO need to fix player hitbox so feels correct
 
 }
