@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 /** First screen of the application. Displayed after the application is created. */
@@ -35,6 +36,8 @@ public class GameScreen implements Screen {
         // TODO temp remove this
         Goose testGoose = new Goose();
         testGoose.sprite.setCenter(player.sprite.getX()-4,player.sprite.getY());
+
+        Event.createEvents();
     }
 
     /**
@@ -57,6 +60,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         GameLogic.update(this,delta);
+        GameLogic.handleCollisions(this);
         draw();
     }
 
@@ -74,6 +78,7 @@ public class GameScreen implements Screen {
         game.batch.setProjectionMatrix(game.fixedViewport.getCamera().combined);
 
         game.batch.draw(BACKGROUND, 0, 0, screenWidth, screenHeight);
+        // TODO draw fence - world limit
 
         // Alters coordinates to be based on camera position
         game.viewport.apply();
@@ -86,6 +91,13 @@ public class GameScreen implements Screen {
             goose.sprite.draw(game.batch);
         }
 
+        for (Event event : Event.events) {
+            if (event.sprite != null) {
+                event.sprite.draw(game.batch);
+            }
+
+        }
+
         drawHUD();
 
         game.batch.end();
@@ -95,7 +107,13 @@ public class GameScreen implements Screen {
      * Convenience method for drawing the healthBar
      */
     private void drawHealthBar() {
-        float healthWidth = 1.5f * (player.getHealth() / player.MAX_HEALTH);
+        float healthWidth;
+        if (player.getHealth() <= 0) {
+            healthWidth = 0;
+        } else {
+            healthWidth = 1.5f * (player.getHealth() / player.MAX_HEALTH);
+        }
+
         float healthHeight = 0.25f;
         float healthBarX = player.sprite.getX() + player.sprite.getWidth()/2 - healthWidth/2;
         float healthBarY = player.sprite.getY()-(healthHeight+0.25f);
@@ -237,3 +255,5 @@ public class GameScreen implements Screen {
         }
     }
 }
+
+// TODO - display item and event counter - top left?

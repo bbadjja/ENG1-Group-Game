@@ -1,5 +1,11 @@
 package com.bbadjja.ENG1;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
+
+import java.awt.*;
+import java.util.ArrayList;
+
 public class GameLogic {
     private static final int FIVE_MINUTES = 5 * 60 * 1000;
 
@@ -14,6 +20,7 @@ public class GameLogic {
     private static long timePaused = 0;
 
     public static String displayTime = "5:00";
+    public static ArrayList<Event> currentEvents = new ArrayList<>();
 
     /**
      * Toggles the state of game execution between paused and unpaused
@@ -53,6 +60,32 @@ public class GameLogic {
         float offsetX = screen.player.sprite.getWidth()/2;
         float offsetY = screen.player.sprite.getHeight()/2;
         screen.game.viewport.getCamera().position.set(playerX+offsetX,playerY+offsetY,0);
+    }
+
+    public static void handleCollisions(GameScreen screen) {
+        if (!isPaused) {
+            for (Event event : Event.events) {
+                if (event.sprite != null) {
+                    Sprite sprite = event.sprite;
+                    Rectangle eventHitbox = sprite.getBoundingRectangle();
+                    if (eventHitbox.overlaps(screen.player.hitbox)) {
+                        if (!currentEvents.contains(event)) {
+                            event.onPlayerEnter(screen.player);
+                            currentEvents.add(event);
+                        }
+                    } else if (currentEvents.contains(event)) {
+                        event.onPlayerExit(screen.player);
+                        currentEvents.remove(event);
+                    }
+                }
+            }
+            for (Goose goose : Goose.gooseList) {
+                // Can replace with goose.hitbox later
+                if (goose.sprite.getBoundingRectangle().overlaps(screen.player.hitbox)) {
+                    goose.onPlayerCollision(screen.player);
+                }
+            }
+        }
     }
 
     /**

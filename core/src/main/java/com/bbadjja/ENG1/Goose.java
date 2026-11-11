@@ -99,7 +99,7 @@ public class Goose {
         return new Rectangle();
     }
 
-    private void onPlayerCollision(Player player) {
+    public void onPlayerCollision(Player player) {
         // when the player's hitbox overlaps with any of the geese hitboxes
         // decrement player health
         player.changeHealth(-5);
