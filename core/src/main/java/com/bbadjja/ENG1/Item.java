@@ -10,13 +10,17 @@ public abstract class Item {
     String name;
     boolean inInventory;
     Rectangle initialPlacement;
+    Rectangle hitbox;
 
     // constructor
-    public Item(String name, Texture texture, boolean inInventory, Rectangle initialPlacement) {
+    public Item(String name, Texture texture, boolean inInventory, Rectangle initialPlacement, Rectangle hitbox) {
         //this.itemID = itemID; // first digit is item subclass, second digit is no. within that subclass
         this.name = name;
         this.inInventory = inInventory;
-        this.sprite = new Sprite(texture);
+        sprite = new Sprite(texture);
+        sprite.setSize(1, 1);
+        hitbox = sprite.getBoundingRectangle();
+        
 
         // TODO Need to calculate initialPlacement some way
         //  E.g. maybe each item has preset spawn locations in a list
@@ -46,7 +50,7 @@ public abstract class Item {
         return ID;
     }
 
-    public abstract void useItem(Player player);
+    public abstract void useItem(Player player, Goose goose);
 
     public void placeOnMap(Rectangle placement) {
         // This should not be abstract as same code for all items
@@ -55,11 +59,23 @@ public abstract class Item {
         // Set sprite x and y to the parameters x and y
     }
 
-    public void pickUpItem(Player player) {
-        if(player.pickupItem(this)) {
+    // call every frame/second in the render
+    public boolean pickUpItem(Player player) {
+
+        // TODO Called by GameScreen / GameLogic when player's hitbox collides with
+        //  item's hitbox/location?
+
+
+        if(player.inventory.size() == 5) {
+            return false;
+        } else {
             this.inInventory = true;
             this.sprite = null;
+            player.inventory.add(this);
+            return true;
         }
+
+
     }
 
 }

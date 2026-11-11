@@ -19,7 +19,7 @@ public class Goose {
         sprite = new Sprite(texture);
         sprite.setSize(1, 1);
         hitBox = new Rectangle();
-        target = calculateTarget();;
+        target = calculateTarget(Player player);
         speed = 4;
 
         gooseList.add(this);
@@ -76,7 +76,7 @@ public class Goose {
      * altered for
      */
 
-    private void changeSpeed(int amount, int time) {
+    public void changeSpeed(int amount, int time) {
         for(Goose goose : gooseList) {
             goose.speed = goose.speed + amount;
         }

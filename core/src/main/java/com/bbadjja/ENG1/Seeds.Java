@@ -12,10 +12,10 @@ class Seeds extends Item {
         // TODO initialPlacement could be got from a list using itemNumber as the index
         //  if inInventory is true, item was placed into inventory when created
         //  so no initalPlacement needed, so initalPlacement can be null - conditional
-        super("Seeds",TEXTURE,inInventory,null);
+        super("Seeds", TEXTURE, true, null, null);
 
-        itemNumber++;
         this.itemID = generateItemID("1",itemNumber);
+        itemNumber++;
     }
 
     /**
@@ -25,13 +25,10 @@ class Seeds extends Item {
      */
 
     @Override
-    public void useItem(Player player) {
-        // TODO Need to call changeTarget on each individual goose
-        //  E.g. below would likely work
-
-        for (Goose goose : Goose.gooseList) {
-            goose.changeTarget(player.hitbox,3000);
-        }
+    public void useItem(Player player, Goose goose) {
+       // The changeTarget method is called on all geese
+       this.hitbox = player.hitbox; // make it the current location on screens
+       goose.changeTarget(this.hitbox, 500);
 
         this.inInventory = false;
         player.inventory.remove(this);
