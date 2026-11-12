@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.*;
 
 public class Player{
-    private final Texture TEXTURE = new Texture("player_front_idle.png");
+    private static final HashMap<String,Texture> TEXTURES = new HashMap<>();
     private final int NORMAL_SPEED = 5;
     public final int MAX_HEALTH = 100;
     public final int INVENTORY_SIZE = 5;
@@ -27,11 +27,15 @@ public class Player{
     private float movementSpeed;
     private long lastDamageTime;
 
+    private int lastStepNum = 1;
+    private long lastTextureTime;
+
     /**
      * Creates a {@code Player} which can move and interact with other entities
      */
     public Player() {
-        sprite = new Sprite(TEXTURE);
+        createTextures();
+        sprite = new Sprite(TEXTURES.get("idle_front"));
         sprite.setSize(1.5f,1.5f);
 
         // Update hitboxes to fit inside texture
@@ -45,8 +49,21 @@ public class Player{
         hidden = false;
         currentInputs = new HashSet<>();
         lastDamageTime = System.currentTimeMillis();
+        lastTextureTime = System.currentTimeMillis();
 
         addInitialItems();
+    }
+
+    /**
+     * Convenience method to create a hash map of all the textures
+     */
+    private static void createTextures() {
+        List<String> directions = List.of("front","back","left","right");
+        for (String direction : directions) {
+            TEXTURES.put("idle_"+direction,new Texture("player_" + direction + "_idle.png"));
+            TEXTURES.put("step1_"+direction,new Texture("player_" + direction + "_step1.png"));
+            TEXTURES.put("step2_"+direction,new Texture("player_" + direction + "_step2.png"));
+        }
     }
 
     /**
@@ -104,6 +121,8 @@ public class Player{
         // Allows diagonal movement and prevents this being faster than normal
         Vector2 velocity = direction.scl(scaledSpeed).setLength(scaledSpeed);
 
+        updateTexture(direction);
+
         sprite.setX(sprite.getX()+velocity.x);
         sprite.setY(sprite.getY()+velocity.y);
 
@@ -111,6 +130,35 @@ public class Player{
         hitbox.y = sprite.getY()+0.2f;
         feetHitbox.x = sprite.getX()+0.35f;
         feetHitbox.y = sprite.getY()+0.2f;
+    }
+
+    /**
+     * Convenience method to update the current texture
+     * @param direction the direction the player is moving in
+     */
+    private void updateTexture(Vector2 direction) {
+        if (System.currentTimeMillis() - lastTextureTime > 250) {
+            if (lastStepNum == 1) {
+                lastStepNum = 2;
+            } else {
+                lastStepNum = 1;
+            }
+            lastTextureTime = System.currentTimeMillis();
+        }
+
+        if (direction.x > 0) {
+            sprite.setTexture(TEXTURES.get("step"+lastStepNum+"_right"));
+        } else if (direction.x < 0) {
+            sprite.setTexture(TEXTURES.get("step"+lastStepNum+"_left"));
+        } else if (direction.y > 0) {
+            sprite.setTexture(TEXTURES.get("step"+lastStepNum+"_back"));
+        } else if (direction.y < 0){
+            sprite.setTexture(TEXTURES.get("step"+lastStepNum+"_front"));
+        }
+
+        if (slipping) {
+            sprite.setTexture(TEXTURES.get("idle_front"));
+        }
     }
 
     /**

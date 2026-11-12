@@ -11,9 +11,9 @@ public class Puddle extends Event{
         new Rectangle(-2.5f,-5,2,2),
         new Rectangle(-12,0,2,2),
         new Rectangle(-4,7.5f,2,2),
-        new Rectangle(6.5f,9,1,1),
-        new Rectangle(1,2.5f,1,1),
-        new Rectangle(9,3,1,1)
+        new Rectangle(6.5f,9,1.5f,1.5f),
+        new Rectangle(1,2.5f,1.5f,1.5f),
+        new Rectangle(9,3,1.5f,1.5f)
     );
     public final static int PUDDLE_COUNT = POSITIONS.size();
 
