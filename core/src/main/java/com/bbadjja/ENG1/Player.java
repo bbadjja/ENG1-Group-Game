@@ -36,8 +36,8 @@ public class Player{
 
         // Update hitboxes to fit inside texture
         // feetHitbox for collisions with ground objects e.g. Puddle/Mud
-        hitbox = new Rectangle(sprite.getX()+0.25f,sprite.getY()+0.15f,sprite.getWidth()-0.5f,sprite.getHeight()-0.1f);
-        feetHitbox = new Rectangle(sprite.getX()+0.25f,sprite.getY()+0.15f,sprite.getWidth()-0.5f,sprite.getHeight()-0.7f);
+        hitbox = new Rectangle(sprite.getX()+0.35f,sprite.getY()+0.15f,sprite.getWidth()-0.75f,sprite.getHeight()-0.2f);
+        feetHitbox = new Rectangle(sprite.getX()+0.35f,sprite.getY()+0.15f,sprite.getWidth()-0.75f,sprite.getHeight()-1.2f);
 
         inventory = new ArrayList<>(INVENTORY_SIZE);
         health = MAX_HEALTH;
@@ -107,10 +107,10 @@ public class Player{
         sprite.setX(sprite.getX()+velocity.x);
         sprite.setY(sprite.getY()+velocity.y);
 
-        hitbox.x = sprite.getX()+0.25f;
-        hitbox.y = sprite.getY()+0.1f;
-        feetHitbox.x = sprite.getX()+0.25f;
-        feetHitbox.y = sprite.getY()+0.1f;
+        hitbox.x = sprite.getX()+0.35f;
+        hitbox.y = sprite.getY()+0.2f;
+        feetHitbox.x = sprite.getX()+0.35f;
+        feetHitbox.y = sprite.getY()+0.2f;
     }
 
     /**
