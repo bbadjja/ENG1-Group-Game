@@ -205,7 +205,7 @@ public class Player{
     public void changeHealth(int amount) {
         if (amount < 0 && System.currentTimeMillis()-lastDamageTime > 250) {
             lastDamageTime = System.currentTimeMillis();
-        } else {
+        } else if (amount < 0) {
             return;
         }
 
