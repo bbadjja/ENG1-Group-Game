@@ -14,7 +14,7 @@ public class Main extends Game {
     public final GlyphLayout GLYPH_LAYOUT = new GlyphLayout();
 
     public ExtendViewport viewport;
-    public ExtendViewport fixedViewport;
+    public ExtendViewport uiViewport;
     public OrthographicCamera camera;
     public SpriteBatch batch;
     public BitmapFont font;
@@ -30,7 +30,7 @@ public class Main extends Game {
         // viewport = 8x8 so 100 pixels = 1 game unit
         viewport = new ExtendViewport(8, 8);
         // Forced to make fixedViewport use pixels so that font will render correctly
-        fixedViewport = new ExtendViewport(800,800,camera);
+        uiViewport = new ExtendViewport(800,800,camera);
 
         Texture fontTexture = new Texture(Gdx.files.internal("gameFont.png"));
         fontTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

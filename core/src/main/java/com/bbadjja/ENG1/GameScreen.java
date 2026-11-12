@@ -73,8 +73,8 @@ public class GameScreen implements Screen {
         game.batch.begin();
 
         // Alters coordinates to be fixed - I.e. (0,0) = bottom left
-        game.fixedViewport.apply();
-        game.batch.setProjectionMatrix(game.fixedViewport.getCamera().combined);
+        game.uiViewport.apply();
+        game.batch.setProjectionMatrix(game.uiViewport.getCamera().combined);
 
         game.batch.draw(BACKGROUND, 0, 0, screenWidth, screenHeight);
         // TODO draw fence - world limit
@@ -111,12 +111,12 @@ public class GameScreen implements Screen {
         if (player.getHealth() <= 0) {
             healthWidth = 0;
         } else {
-            healthWidth = 1.5f * (player.getHealth() / player.MAX_HEALTH);
+            healthWidth = 1.3f * (player.getHealth() / player.MAX_HEALTH);
         }
 
-        float healthHeight = 0.25f;
+        float healthHeight = 0.15f;
         float healthBarX = player.sprite.getX() + player.sprite.getWidth()/2 - healthWidth/2;
-        float healthBarY = player.sprite.getY()-(healthHeight+0.25f);
+        float healthBarY = player.sprite.getY() + player.sprite.getHeight()+(healthHeight);
 
         game.batch.draw(HEALTH_BAR,healthBarX,healthBarY,healthWidth,healthHeight);
     }
@@ -125,8 +125,8 @@ public class GameScreen implements Screen {
      * Convenience method for drawing the HUD
      */
     private void drawHUD() {
-        game.fixedViewport.apply();
-        game.batch.setProjectionMatrix(game.fixedViewport.getCamera().combined);
+        game.uiViewport.apply();
+        game.batch.setProjectionMatrix(game.uiViewport.getCamera().combined);
 
         drawInventory();
         drawTimer();
@@ -142,7 +142,7 @@ public class GameScreen implements Screen {
     private void drawInventory() {
         int scale = 800/8;
 
-        float screenWidth = game.fixedViewport.getCamera().viewportWidth;
+        float screenWidth = game.uiViewport.getCamera().viewportWidth;
         float spacing = 0.05f * scale;
 
         float size = 0.5f * scale;
@@ -226,10 +226,10 @@ public class GameScreen implements Screen {
         if(width <= 0 || height <= 0) return;
 
         game.viewport.update(width, height, false);
-        game.fixedViewport.update(width,height,true);
+        game.uiViewport.update(width,height,true);
 
-        screenWidth = game.fixedViewport.getCamera().viewportWidth;
-        screenHeight = game.fixedViewport.getCamera().viewportHeight;
+        screenWidth = game.uiViewport.getCamera().viewportWidth;
+        screenHeight = game.uiViewport.getCamera().viewportHeight;
 
         // Prevents inputs getting stuck when resizing the window
         player.currentInputs.clear();
@@ -283,3 +283,6 @@ public class GameScreen implements Screen {
 
 // TODO choose some spots across the world for puddles and mud patches
 //  add to their position lists and choose different sizes - 2 max proabaly
+
+// TODO potentially change player size
+// TODO change healthBar size and potentially position

@@ -58,11 +58,11 @@ public abstract class Event {
     public abstract void onTrigger(Player player);
 
     public static void createEvents() {
-        for (int i = 0; i < Puddle.puddleCount; i++) {
+        for (int i = 0; i < Puddle.PUDDLE_COUNT; i++) {
             new Puddle();
         }
 
-        for (int i = 0; i < Mud.mudCount; i++) {
+        for (int i = 0; i < Mud.MUD_COUNT; i++) {
             new Mud();
         }
     }

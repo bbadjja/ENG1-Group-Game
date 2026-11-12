@@ -32,7 +32,7 @@ public class Player{
      */
     public Player() {
         sprite = new Sprite(TEXTURE);
-        sprite.setSize(1,1);
+        sprite.setSize(1.5f,1.5f);
 
         // Update hitboxes to fit inside texture
         // feetHitbox for collisions with ground objects e.g. Puddle/Mud
@@ -52,7 +52,7 @@ public class Player{
     /**
      * Instantiates the player's initial items and fills the inventory with them
      */
-    public void addInitialItems() {
+    private void addInitialItems() {
         inventory.add(0,new Seeds(true));
         inventory.add(1,new SausageRoll(true));
     }
@@ -179,7 +179,7 @@ public class Player{
      * @param percentage the percentage to change speed to
      * @throws  IllegalArgumentException if percentage < 0
      */
-    public void applySpeedPercentage(float percentage) throws IllegalArgumentException {
+    public void changeSpeed(float percentage) throws IllegalArgumentException {
         if (percentage >= 0) {
             movementSpeed = NORMAL_SPEED * percentage;
         } else {

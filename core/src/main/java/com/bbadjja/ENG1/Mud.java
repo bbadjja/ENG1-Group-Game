@@ -8,31 +8,36 @@ import java.util.Random;
 
 public class Mud extends Event{
     private final static Texture TEXTURE = new Texture("mud.png");
-    private static int eventNum = 0;
-    private static final List<Rectangle> positions = List.of(
+    private static final List<Rectangle> POSITIONS = List.of(
         new Rectangle(-3,-3,1,1),
-        new Rectangle(-5,-10,2,2)
+        new Rectangle(-5,-10,2,2),
+        new Rectangle(-7,3.5f,1,1),
+        new Rectangle(6,-4,2,2),
+        new Rectangle(3,4.5f,2,2),
+        new Rectangle(12,1,1,1)
     );
-    public final static int mudCount = positions.size();
+    public final static int MUD_COUNT = POSITIONS.size();
+
+    private static int mudNum = 0;
 
     private float speedPercent;
 
     public Mud() {
-        super("Mud",positions.get(eventNum),false,TEXTURE);
-        eventNum++;
+        super("Mud", POSITIONS.get(mudNum),false,TEXTURE);
+        mudNum++;
 
         Random r = new Random();
         speedPercent = 0.4f + r.nextFloat() * (0.6f-0.4f);
     }
 
     @Override
-    public void onPlayerExit(Player player) {
-        player.applySpeedPercentage(1);
+    public void onTrigger(Player player) {
+        player.changeSpeed(speedPercent);
+        GameLogic.eventsTriggered++;
     }
 
     @Override
-    public void onTrigger(Player player) {
-        player.applySpeedPercentage(speedPercent);
-        GameLogic.eventsTriggered++;
+    public void onPlayerExit(Player player) {
+        player.changeSpeed(1);
     }
 }

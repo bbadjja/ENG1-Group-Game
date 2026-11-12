@@ -1,28 +1,30 @@
 package com.bbadjja.ENG1;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 
 import java.util.List;
-import java.util.Vector;
 
 public class Puddle extends Event{
     private final static Texture TEXTURE = new Texture("puddle.png");
-    private static int eventNum = 0;
-    private final static List<Rectangle> positions = List.of(
-        new Rectangle(3,3,1,1),
-        new Rectangle(5,5,2,2)
+    private final static List<Rectangle> POSITIONS = List.of(
+        new Rectangle(-2.5f,-5,2,2),
+        new Rectangle(-12,0,2,2),
+        new Rectangle(-4,7.5f,2,2),
+        new Rectangle(6.5f,9,1,1),
+        new Rectangle(1,2.5f,1,1),
+        new Rectangle(9,3,1,1)
     );
-    public final static int puddleCount = positions.size();
+    public final static int PUDDLE_COUNT = POSITIONS.size();
 
-    private final static int damage = 5;
-    private final static float distance = 1f;
+    private static int puddleNum = 0;
+
+    private int damage;
 
     public Puddle() {
-        super("Puddle",positions.get(eventNum),false,TEXTURE);
-        eventNum++;
+        super("Puddle", POSITIONS.get(puddleNum),false,TEXTURE);
+        this.damage = 5;
+        puddleNum++;
     }
 
     @Override
