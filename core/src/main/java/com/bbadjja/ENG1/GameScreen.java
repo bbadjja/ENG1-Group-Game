@@ -280,9 +280,3 @@ public class GameScreen implements Screen {
         }
     }
 }
-
-// TODO choose some spots across the world for puddles and mud patches
-//  add to their position lists and choose different sizes - 2 max proabaly
-
-// TODO potentially change player size
-// TODO change healthBar size and potentially position

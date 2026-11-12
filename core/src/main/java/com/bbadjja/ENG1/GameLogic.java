@@ -72,7 +72,6 @@ public class GameLogic {
         if (!isPaused) {
             for (Event event : Event.eventList) {
                 if (event.sprite != null) {
-                    Sprite sprite = event.sprite;
                     Rectangle eventHitbox = event.triggerArea;
                     Rectangle playerHitbox;
                     if (event instanceof Puddle || event instanceof Mud) {
