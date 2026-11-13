@@ -1,6 +1,5 @@
 package com.bbadjja.ENG1;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
@@ -97,13 +96,11 @@ public class GameLogic {
             }
 
             for (Goose goose : Goose.gooseList) {
-                // Can replace with goose.hitbox later
-                if (goose.sprite.getBoundingRectangle().overlaps(screen.player.hitbox)) {
+                if (goose.hitbox.overlaps(screen.player.hitbox)) {
                     goose.onPlayerCollision(screen.player);
                 }
             }
 
-            // TODO might need to change this depending on how Item class works
             @SuppressWarnings("unchecked")
             ArrayList<Item> currentList = (ArrayList<Item>) Item.itemList.clone();
             for (Item item :  currentList) {

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public abstract class Item {
     Sprite sprite;
-    String itemID; // can easily be changed to integer if needed - ask Amber
+    String itemID;
     String name;
     boolean inInventory;
     Rectangle initialPlacement;
@@ -19,9 +19,7 @@ public abstract class Item {
 
     public static ArrayList<Item> itemList = new ArrayList<>();
 
-    // constructor
     public Item(String name, Texture texture, boolean inInventory) {
-        //this.itemID = itemID; // first digit is item subclass, second digit is no. within that subclass
         this.name = name;
         this.inInventory = inInventory;
         sprite = new Sprite(texture);
@@ -67,7 +65,6 @@ public abstract class Item {
         float x = -20 + r.nextFloat() * (20- -20);
         float y = -20 + r.nextFloat() * (20- -20);
 
-        // Set sprite x and y to the parameters x and y
         this.sprite.setPosition(x,y);
         this.sprite.setSize(1, 1);
         return(new Rectangle(x, y, 1, 1));
