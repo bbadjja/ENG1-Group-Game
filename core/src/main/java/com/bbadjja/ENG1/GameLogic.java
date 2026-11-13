@@ -1,6 +1,5 @@
 package com.bbadjja.ENG1;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ public class GameLogic {
     public static boolean isPaused = false;
     public static int score = 0;
     public static int itemsUsed = 0;
+    public static int eventsTriggered = 0;
 
     // All times in milliseconds for consistency, except displayTime
     public static long startTime;
@@ -21,10 +21,16 @@ public class GameLogic {
     public static String displayTime = "5:00";
     public static ArrayList<Event> currentEvents = new ArrayList<>();
 
+    public static boolean gameOver = false;
+
     /**
      * Toggles the state of game execution between paused and unpaused
      */
     public static void togglePause() {
+        if (gameOver) {
+            return;
+        }
+
         isPaused = !isPaused;
         if (!isPaused) {
             timePaused += System.currentTimeMillis() - pauseStart;
@@ -42,6 +48,10 @@ public class GameLogic {
     public static void update(GameScreen screen, float delta) {
         if (!isPaused){
             screen.player.move(delta);
+
+            for (Goose goose : Goose.gooseList) {
+                goose.movement(delta,screen.player);
+            }
 
             if (timeRemaining <= 0) {
                 endGame(false);
@@ -63,11 +73,17 @@ public class GameLogic {
 
     public static void handleCollisions(GameScreen screen) {
         if (!isPaused) {
-            for (Event event : Event.events) {
+            for (Event event : Event.eventList) {
                 if (event.sprite != null) {
-                    Sprite sprite = event.sprite;
-                    Rectangle eventHitbox = sprite.getBoundingRectangle();
-                    if (eventHitbox.overlaps(screen.player.hitbox)) {
+                    Rectangle eventHitbox = event.triggerArea;
+                    Rectangle playerHitbox;
+                    if (event instanceof Puddle || event instanceof Mud) {
+                        playerHitbox = screen.player.feetHitbox;
+                    } else {
+                        playerHitbox = screen.player.hitbox;
+                    }
+
+                    if (eventHitbox.overlaps(playerHitbox)) {
                         if (!currentEvents.contains(event)) {
                             event.onPlayerEnter(screen.player);
                             currentEvents.add(event);
@@ -78,10 +94,18 @@ public class GameLogic {
                     }
                 }
             }
+
             for (Goose goose : Goose.gooseList) {
-                // Can replace with goose.hitbox later
-                if (goose.sprite.getBoundingRectangle().overlaps(screen.player.hitbox)) {
+                if (goose.hitbox.overlaps(screen.player.hitbox)) {
                     goose.onPlayerCollision(screen.player);
+                }
+            }
+
+            @SuppressWarnings("unchecked")
+            ArrayList<Item> currentList = (ArrayList<Item>) Item.itemList.clone();
+            for (Item item :  currentList) {
+                if (item.sprite.getBoundingRectangle().overlaps(screen.player.hitbox)) {
+                    item.pickUpItem(screen.player);
                 }
             }
         }
@@ -113,9 +137,7 @@ public class GameLogic {
      */
     public static void endGame(boolean win) {
         String runTime = getDisplayTime(FIVE_MINUTES - timeRemaining);
-
-        // TODO Temporary - need permanent way to show end of game
-        //  E.g. display overlay saying Game Over /n You Win/Lose
         GameLogic.togglePause();
+        gameOver = true;
     }
 }

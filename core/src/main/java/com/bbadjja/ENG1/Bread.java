@@ -2,25 +2,29 @@ package com.bbadjja.ENG1;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import java.util.ArrayList;
+
 public class Bread extends Item {
     private static int itemNumber = 0;
-    private final static Texture TEXTURE = new Texture("char_temp.png");
-    
+    private final static Texture TEXTURE = new Texture("bread.png");
+
     public Bread(boolean inInventory) {
-        super("Bread", TEXTURE, true, null, null);
+        super("Bread", TEXTURE, inInventory);
 
         this.itemID = generateItemID("2",itemNumber);
     }
 
-    /**    
+    /**
      * Stops all goose movement for a fixed amount of time and removes
      * the item from the player's inventory as well as the gamescreen
-     * 
-     * @see com.bbadjja.ENG1.Item#useItem(com.bbadjja.ENG1.Player, com.bbadjja.ENG1.Goose)
+     *
+     * @see Item#useItem(Player, ArrayList)
      */
     @Override
-    public void useItem(Player player, Goose goose) {
-        goose.changeSpeed(0, 5);
+    public void useItem(Player player, ArrayList<Goose> gooseList) {
+        for (Goose goose : gooseList) {
+            goose.changeSpeed(0, 5);
+        }
 
         this.inInventory = false;
         player.inventory.remove(this);

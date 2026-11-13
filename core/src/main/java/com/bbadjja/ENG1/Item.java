@@ -6,30 +6,36 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.Random;
 //import java.util.random.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public abstract class Item {
     Sprite sprite;
-    String itemID; // can easily be changed to integer if needed - ask Amber
+    String itemID;
     String name;
     boolean inInventory;
     Rectangle initialPlacement;
     Rectangle hitbox;
 
-    // constructor
-    public Item(String name, Texture texture, boolean inInventory, Rectangle initialPlacement, Rectangle hitbox) {
-        //this.itemID = itemID; // first digit is item subclass, second digit is no. within that subclass
+    public static ArrayList<Item> itemList = new ArrayList<>();
+
+    public Item(String name, Texture texture, boolean inInventory) {
         this.name = name;
         this.inInventory = inInventory;
         sprite = new Sprite(texture);
-        hitbox = sprite.getBoundingRectangle();
-        
-
-        // TODO Need to calculate initialPlacement some way
-        //  E.g. maybe each item has preset spawn locations in a list
-        //  and you choose the index of the currrent itemNumber to pass to
-        //  the super constructor
 
         if (!inInventory) {
             this.initialPlacement = placeOnMap();
+            itemList.add(this);
+
+            if (this.name.equals("Bread")){
+                this.hitbox = new Rectangle(sprite.getX()+0.25f,sprite.getY()+0.3f,sprite.getWidth()-0.5f,sprite.getHeight()-0.55f);
+            } else if (this.name.equals("SausageRoll")){
+                this.hitbox = new Rectangle(sprite.getX()+0.1f,sprite.getY()+0.1f,sprite.getWidth()-0.2f,sprite.getHeight()-0.2f);
+            } else {
+                this.hitbox = sprite.getBoundingRectangle();
+            }
+
         }
 
     }
@@ -51,32 +57,38 @@ public abstract class Item {
         return ID;
     }
 
-    public abstract void useItem(Player player, Goose goose);
+    public abstract void useItem(Player player, ArrayList<Goose> gooseList);
 
     public Rectangle placeOnMap() {
 
         Random r = new Random();
-        float x = 0 + r.nextFloat() * 5000;
-        float y = 0 + r.nextFloat() * 5000;
+        float x = -20 + r.nextFloat() * (20- -20);
+        float y = -20 + r.nextFloat() * (20- -20);
 
-        // Set sprite x and y to the parameters x and y
+        this.sprite.setPosition(x,y);
         this.sprite.setSize(1, 1);
         return(new Rectangle(x, y, 1, 1));
     }
 
-    // call every frame/second in the render
     public boolean pickUpItem(Player player) {
-        if((player.hitbox).overlaps(this.hitbox)) {
-            if(player.inventory.size() == 5) {
-                return false;
-            } else {
-                this.inInventory = true;
-                this.sprite = null;
-                player.inventory.add(this);
-                return true;
-            }
+        if(player.inventory.size() == 5) {
+            return false;
+        } else {
+            this.inInventory = true;
+            player.inventory.add(this);
+            itemList.remove(this);
+            return true;
         }
-        return false;
+    }
+
+    public static void createMapItems() {
+        for (int i = 0; i < 6; i++) {
+            new SausageRoll(false);
+        }
+
+        for (int i = 0; i < 6; i++) {
+            new Bread(false);
+        }
     }
 
 }

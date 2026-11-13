@@ -7,29 +7,37 @@ import java.util.List;
 
 public class Puddle extends Event{
     private final static Texture TEXTURE = new Texture("puddle.png");
-    private static int eventNum = 0;
-    private final static List<Rectangle> positions = List.of(
-        new Rectangle(3,3,1,1),
-        new Rectangle(5,5,1,1)
+    private final static List<Rectangle> POSITIONS = List.of(
+        new Rectangle(-2.5f,-5,2,2),
+        new Rectangle(-12,0,2,2),
+        new Rectangle(-4,7.5f,2,2),
+        new Rectangle(6.5f,9,1.5f,1.5f),
+        new Rectangle(1,2.5f,1.5f,1.5f),
+        new Rectangle(9,3,1.5f,1.5f)
     );
-    public final static int puddleCount = positions.size();
+    public final static int PUDDLE_COUNT = POSITIONS.size();
 
-    private final static int damage = 5;
-    private final static float distance = 0.5f;
+    private static int puddleNum = 0;
+
+    private int damage;
 
     public Puddle() {
-        super("Puddle",positions.get(eventNum),false,TEXTURE);
-        eventNum++;
+        super("Puddle", POSITIONS.get(puddleNum),false,TEXTURE);
+        this.damage = 5;
+        puddleNum++;
     }
 
     @Override
     public void onTrigger(Player player) {
         player.changeHealth(-damage);
-        // TODO make player slip
+        player.slipping = true;
+        player.slippingInputs.addAll(player.currentInputs);
+        GameLogic.eventsTriggered++;
     }
 
     @Override
     public void onPlayerExit(Player player) {
-
+        player.slipping = false;
+        player.slippingInputs.clear();
     }
 }

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 /** First screen of the application. Displayed after the application is created. */
@@ -30,14 +29,24 @@ public class GameScreen implements Screen {
         this.game = game;
 
         player = new Player();
-        player.sprite.setCenter(0,0); // This is now center
+        player.sprite.setCenter(0,0);
         Gdx.input.setInputProcessor(new PlayerInputListener(player));
 
-        // TODO temp remove this
-        Goose testGoose = new Goose();
-        testGoose.sprite.setCenter(player.sprite.getX()-4,player.sprite.getY());
+        Goose goose1 = new Goose();
+        goose1.goosePos.set(player.sprite.getX()-8,player.sprite.getY());
+
+        Goose goose2 = new Goose();
+        goose2.goosePos.set(player.sprite.getX(),player.sprite.getY()-8);
+
+        Goose goose3 = new Goose();
+        goose3.goosePos.set(player.sprite.getX()+4,player.sprite.getY()+8);
+
+        for (Goose goose : Goose.gooseList) {
+            goose.sprite.setPosition(goose.goosePos.x,goose.goosePos.y);
+        }
 
         Event.createEvents();
+        Item.createMapItems();
     }
 
     /**
@@ -74,29 +83,32 @@ public class GameScreen implements Screen {
         game.batch.begin();
 
         // Alters coordinates to be fixed - I.e. (0,0) = bottom left
-        game.fixedViewport.apply();
-        game.batch.setProjectionMatrix(game.fixedViewport.getCamera().combined);
+        game.uiViewport.apply();
+        game.batch.setProjectionMatrix(game.uiViewport.getCamera().combined);
 
         game.batch.draw(BACKGROUND, 0, 0, screenWidth, screenHeight);
-        // TODO draw fence - world limit
 
         // Alters coordinates to be based on camera position
         game.viewport.apply();
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
-        player.sprite.draw(game.batch);
-        drawHealthBar();
+        for (Event event : Event.eventList) {
+            if (event.sprite != null) {
+                event.sprite.draw(game.batch);
+            }
+        }
+
+        for (Item item : Item.itemList) {;
+            item.sprite.draw(game.batch);
+        }
 
         for (Goose goose : Goose.gooseList) {
             goose.sprite.draw(game.batch);
         }
 
-        for (Event event : Event.events) {
-            if (event.sprite != null) {
-                event.sprite.draw(game.batch);
-            }
+        player.sprite.draw(game.batch);
 
-        }
+        drawHealthBar();
 
         drawHUD();
 
@@ -111,12 +123,12 @@ public class GameScreen implements Screen {
         if (player.getHealth() <= 0) {
             healthWidth = 0;
         } else {
-            healthWidth = 1.5f * (player.getHealth() / player.MAX_HEALTH);
+            healthWidth = 1.3f * (player.getHealth() / player.MAX_HEALTH);
         }
 
-        float healthHeight = 0.25f;
+        float healthHeight = 0.15f;
         float healthBarX = player.sprite.getX() + player.sprite.getWidth()/2 - healthWidth/2;
-        float healthBarY = player.sprite.getY()-(healthHeight+0.25f);
+        float healthBarY = player.sprite.getY() + player.sprite.getHeight()+(healthHeight);
 
         game.batch.draw(HEALTH_BAR,healthBarX,healthBarY,healthWidth,healthHeight);
     }
@@ -125,11 +137,12 @@ public class GameScreen implements Screen {
      * Convenience method for drawing the HUD
      */
     private void drawHUD() {
-        game.fixedViewport.apply();
-        game.batch.setProjectionMatrix(game.fixedViewport.getCamera().combined);
+        game.uiViewport.apply();
+        game.batch.setProjectionMatrix(game.uiViewport.getCamera().combined);
 
         drawInventory();
         drawTimer();
+        drawScoreValues();
         if (GameLogic.isPaused) {
            drawPauseMessage();
         }
@@ -141,7 +154,7 @@ public class GameScreen implements Screen {
     private void drawInventory() {
         int scale = 800/8;
 
-        float screenWidth = game.fixedViewport.getCamera().viewportWidth;
+        float screenWidth = game.uiViewport.getCamera().viewportWidth;
         float spacing = 0.05f * scale;
 
         float size = 0.5f * scale;
@@ -152,7 +165,6 @@ public class GameScreen implements Screen {
 
         for (int slot = 0; slot < player.INVENTORY_SIZE; slot++) {
             game.batch.draw(INVENTORY_SLOT,x,y,size,size);
-            // TODO one potential way to display items in inventory
 
             if (slot < player.inventory.size()) {
                 float itemX = x + (size-itemSize)/2;
@@ -176,12 +188,30 @@ public class GameScreen implements Screen {
     }
 
     /**
+     * Convenience method for drawing items used and events triggered
+     */
+    private void drawScoreValues() {
+        String message1 = "Items Used: " + GameLogic.itemsUsed;
+        String message2 = "Events Triggered: " + GameLogic.eventsTriggered;
+        game.GLYPH_LAYOUT.setText(game.font,message1);
+        float textHeight = game.GLYPH_LAYOUT.height;
+        game.font.draw(game.batch,message1,0,screenHeight);
+        game.font.draw(game.batch,message2,0,screenHeight-(textHeight+5));
+    }
+
+    /**
      * Convenience method for drawing the pause message
      */
     private void drawPauseMessage() {
         int scale = 800/8;
+        String message;
 
-        String message = "Press Escape to Unpause.";
+        if (GameLogic.gameOver) {
+            message = "Game Over";
+        } else {
+            message = "Press Escape to Unpause.";
+        }
+
         game.GLYPH_LAYOUT.setText(game.font,message);
         float textWidth = game.GLYPH_LAYOUT.width;
         float textHeight = game.GLYPH_LAYOUT.height;
@@ -202,15 +232,17 @@ public class GameScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        // If the window is minimized on a desktop (LWJGL3) platform, width and height are 0, which causes problems.
-        // In that case, we don't resize anything, and wait for the window to be a normal size before updating.
+        // If the window is minimized on a desktop (LWJGL3) platform,
+        //   width and height are 0, which causes problems.
+        // In that case, we don't resize anything, and wait for the window to
+        //   be a normal size before updating.
         if(width <= 0 || height <= 0) return;
 
         game.viewport.update(width, height, false);
-        game.fixedViewport.update(width,height,true);
+        game.uiViewport.update(width,height,true);
 
-        screenWidth = game.fixedViewport.getCamera().viewportWidth;
-        screenHeight = game.fixedViewport.getCamera().viewportHeight;
+        screenWidth = game.uiViewport.getCamera().viewportWidth;
+        screenHeight = game.uiViewport.getCamera().viewportHeight;
 
         // Prevents inputs getting stuck when resizing the window
         player.currentInputs.clear();
@@ -224,7 +256,6 @@ public class GameScreen implements Screen {
      */
     @Override
     public void pause() {
-        // Invoked when your application is paused.
         GameLogic.togglePause();
     }
 
@@ -248,12 +279,16 @@ public class GameScreen implements Screen {
     public void dispose() {
         BACKGROUND.dispose();
         HEALTH_BAR.dispose();
+        INVENTORY_SLOT.dispose();
+        TEXT_BACKGROUND.dispose();
         player.sprite.getTexture().dispose();
 
         for (Goose goose : Goose.gooseList) {
             goose.sprite.getTexture().dispose();
         }
+
+        for (Event event : Event.eventList) {
+            event.sprite.getTexture().dispose();
+        }
     }
 }
-
-// TODO - display item and event counter - top left?
