@@ -118,4 +118,8 @@ public class Player{
         return this.movementSpeed;
     }
 
+    public Rectangle getHitBox() {
+        return this.hitbox;
+    }
+
 }

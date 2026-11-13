@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 public class Goose {
     Texture texture;
     Sprite sprite;
-    Rectangle hitBox;
-    Rectangle target;
+    Rectangle hitbox;
+    Vector2 target;
     int speed;
+    boolean altTarget;
+    Vector2 goosePos;
 
     static ArrayList<Goose> gooseList = new ArrayList<>();
 
@@ -18,23 +21,51 @@ public class Goose {
         texture = new Texture("goose_temp.png");
         sprite = new Sprite(texture);
         sprite.setSize(1, 1);
-        hitBox = new Rectangle();
-        target = calculateTarget(Player player);
+        hitbox = new Rectangle();
+        //target = calculateTarget(Player player);
         speed = 4;
+        altTarget = false;
+        target = new Vector2();
+        goosePos = new Vector2();
 
         gooseList.add(this);
     }
+    
+    // target is player hitbox, which refreshes every frame in the render
+    // however when target is changed this needs to be changed temporarily
 
-    private void movement() {
-        // Geese should move constantly at x speed towards their set target
+    private void movement(float delta, Player player) {
+        // loop through all geese - won't this take forever?
+        for(Goose goose : gooseList) {
+            // is altTarget false? then calculate target based on player location
+            // otherwise carry on straight to the movement
+            if(altTarget == false) {
+                goose.target.set(player.getHitBox().getX() + player.getHitBox().getWidth() /2,
+                player.getHitBox().getY() + player.getHitBox().getHeight() /2);
+            }
 
-        //
+            // find the goose coords and centre them
+            //goosePos.set(goose.hitbox.getX() + goose.hitbox.getWidth() /2, 
+            //goose.hitbox.getY() + goose.hitbox.getHeight());
 
-        hitBox.set(sprite.getX(), sprite.getY(),
-            sprite.getWidth(), sprite.getHeight());
+            // calculate the direction and distance between the two points
+            Vector2 direction = new Vector2(target).sub(goosePos);
+            float distance = direction.len();
+
+            // move the goose in that direction by speed * delta
+            if(distance > 0) {
+                direction.nor();
+
+                goosePos.mulAdd(direction, speed * delta);
+                goose.sprite.setPosition(goosePos.x, goosePos.y);
+            }
+
+            // update the goose hitbox to the new position
+            goose.hitbox = sprite.getBoundingRectangle();
+        }
     }
 
-    /**
+        /**
      * This method changes the targets of all geese to a different one for a
      * set amount of milliseconds before returning it to its original target
      * of the player. It is used for when items such as Seeds are used.
@@ -45,6 +76,7 @@ public class Goose {
 
     public void changeTarget(Rectangle tempTarget, int time) {
         for(Goose goose : gooseList) {
+            this.altTarget = true;
             goose.target = tempTarget;
         }
 
@@ -53,16 +85,11 @@ public class Goose {
         //  to check if current time > this time + 3 second. If so, reset
         //  target to player hitbox.
 
-//        try {
-//            Thread.sleep(time);
-//        }
-//        catch (Exception e) {
-//            System.out.println(e);
-//        }
-//
-//        for(Goose goose : gooseList) {
-//            goose.target = calculateTarget();
-//        }
+
+        // will only ever be a fixed target
+        for(Goose goose : gooseList) {
+            this.altTarget = false;
+        }
     }
 
     /**
@@ -111,5 +138,4 @@ public class Goose {
         // decrement player health
         player.changeHealth(-5);
     }
-
 }
