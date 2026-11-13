@@ -26,7 +26,7 @@ class Seeds extends Item {
     public void useItem(Player player, Goose goose) {
        // The changeTarget method is called on all geese
        this.hitbox = player.hitbox; // make it the current location on screens
-       goose.changeTarget(this.hitbox, 500);
+       goose.changeTarget(this.hitbox, 5);
 
         this.inInventory = false;
         player.inventory.remove(this);

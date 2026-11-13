@@ -9,11 +9,15 @@ import com.badlogic.gdx.math.Vector2;
 public class Goose {
     Texture texture;
     Sprite sprite;
+
     Rectangle hitbox;
     Vector2 target;
     int speed;
-    boolean altTarget;
     Vector2 goosePos;
+
+    boolean altTarget;
+    float speedTimer;
+    float targetTimer;
 
     static ArrayList<Goose> gooseList = new ArrayList<>();
 
@@ -35,15 +39,26 @@ public class Goose {
     // however when target is changed this needs to be changed temporarily
 
     private void movement(float delta, Player player) {
-        // loop through all geese - won't this take forever?
-        for(Goose goose : gooseList) {
-            // is altTarget false? then calculate target based on player location
-            // otherwise carry on straight to the movement
-            if(altTarget == false) {
+        // decrement speedTimer and check if it's over
+        if(speedTimer > 0) {
+            speedTimer = speedTimer - delta;
+        }
+        else {
+            changeSpeed(4, 300000);
+        }
+
+        // decrement targetTimer and check if it's over
+        if(targetTimer > 0) {
+            targetTimer = targetTimer - delta;
+        }
+        else {
+            for(Goose goose: gooseList) {
                 goose.target.set(player.getHitBox().getX() + player.getHitBox().getWidth() /2,
                 player.getHitBox().getY() + player.getHitBox().getHeight() /2);
             }
+        }
 
+        for(Goose goose : gooseList) {
             // find the goose coords and centre them
             //goosePos.set(goose.hitbox.getX() + goose.hitbox.getWidth() /2, 
             //goose.hitbox.getY() + goose.hitbox.getHeight());
@@ -74,22 +89,11 @@ public class Goose {
      * @param time how long the tempTarget should be kept for in milliseconds
      */
 
-    public void changeTarget(Rectangle tempTarget, int time) {
+    public void changeTarget(Rectangle tempTarget, float time) {
         for(Goose goose : gooseList) {
-            this.altTarget = true;
-            goose.target = tempTarget;
+            goose.target.set(tempTarget.x, tempTarget.y);
         }
-
-        // TODO instead of this do a call to System.currentTimeMillis()
-        //  and save this to a variable. Then add to the movement method a way
-        //  to check if current time > this time + 3 second. If so, reset
-        //  target to player hitbox.
-
-
-        // will only ever be a fixed target
-        for(Goose goose : gooseList) {
-            this.altTarget = false;
-        }
+        targetTimer = time;
     }
 
     /**
@@ -103,39 +107,19 @@ public class Goose {
      * altered for
      */
 
-    public void changeSpeed(int amount, int time) {
+    public void changeSpeed(int newSpeed, float time) {
         for(Goose goose : gooseList) {
-            goose.speed = goose.speed + amount;
+            goose.speed = newSpeed;
         }
-
-        /**
-        TODO instead of this do a call to System.currentTimeMillis()
-        and save this to a variable. Then add to the movement method a way
-        to check if current time > this time + 3 second. If so, reset
-        target to player hitbox.
-
-
-         try {
-            Thread.sleep(time);
-        }
-        catch (Exception e) {
-            System.out.println(e);
-        }
-
-        for(Goose goose : gooseList) {
-            goose.speed = 1; // whatever is abritrary speed
-        }
-         */
+        speedTimer = time;
     }
 
-    private Rectangle calculateTarget(Player player) {
-        // calculate target based on player location
-        return new Rectangle();
-    }
-
+    // call every frame in render
     private void onPlayerCollision(Player player) {
-        // when the player's hitbox overlaps with any of the geese hitboxes
-        // decrement player health
-        player.changeHealth(-5);
+        for(Goose goose : gooseList) {
+            if((goose.hitbox).overlaps(player.getHitBox())) {
+                player.changeHealth(-5);
+            }
+        }
     }
 }

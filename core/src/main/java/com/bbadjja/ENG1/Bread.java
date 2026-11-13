@@ -20,8 +20,7 @@ public class Bread extends Item {
      */
     @Override
     public void useItem(Player player, Goose goose) {
-        // TODO Auto-generated method stub
-        goose.changeSpeed(0, 500);
+        goose.changeSpeed(0, 5);
 
         this.inInventory = false;
         player.inventory.remove(this);
