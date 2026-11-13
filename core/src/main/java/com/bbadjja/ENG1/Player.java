@@ -96,27 +96,6 @@ public class Player{
 
     // TODO might have moved to Item class
     /**
-     * Attempts to pick up an item the player has collided with
-     *
-     * @param item the item to be picked up
-     * @return whether the item could be picked up, false if inventory is full
-     */
-    public boolean pickupItem(Item item) {
-        // TODO Called by GameLogic when player's hitbox collides with item's hitbox
-
-        if (inventoryFull()) {
-            return false;
-        } else {
-            inventory.add(item);
-            return true;
-        }
-    }
-
-    public boolean inventoryFull() {
-        return inventory.size() < INVENTORY_SIZE;
-    }
-
-    /**
      * Changes the player's health
      *
      * @param amount the amount to change the health by, can be negative
@@ -158,6 +137,8 @@ public class Player{
         return this.movementSpeed;
     }
 
-    // TODO need to fix player hitbox so feels correct
+    public Rectangle getHitBox() {
+        return this.hitbox;
+    }
 
 }
