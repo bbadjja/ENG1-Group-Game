@@ -20,18 +20,12 @@ public abstract class Item {
     public static ArrayList<Item> itemList = new ArrayList<>();
 
     // constructor
-    public Item(String name, Texture texture, boolean inInventory, Rectangle initialPlacement, Rectangle hitbox) {
+    public Item(String name, Texture texture, boolean inInventory, Rectangle hitbox) {
         //this.itemID = itemID; // first digit is item subclass, second digit is no. within that subclass
         this.name = name;
         this.inInventory = inInventory;
         sprite = new Sprite(texture);
         hitbox = sprite.getBoundingRectangle();
-
-
-        // TODO Need to calculate initialPlacement some way
-        //  E.g. maybe each item has preset spawn locations in a list
-        //  and you choose the index of the currrent itemNumber to pass to
-        //  the super constructor
 
         if (!inInventory) {
             this.initialPlacement = placeOnMap();
@@ -57,32 +51,39 @@ public abstract class Item {
         return ID;
     }
 
-    public abstract void useItem(Player player, Goose goose);
+    public abstract void useItem(Player player, ArrayList<Goose> gooseList);
 
     public Rectangle placeOnMap() {
 
         Random r = new Random();
-        float x = 0 + r.nextFloat() * 5000;
-        float y = 0 + r.nextFloat() * 5000;
+        float x = -20 + r.nextFloat() * (20- -20);
+        float y = -20 + r.nextFloat() * (20- -20);
 
         // Set sprite x and y to the parameters x and y
+        this.sprite.setPosition(x,y);
         this.sprite.setSize(1, 1);
         return(new Rectangle(x, y, 1, 1));
     }
 
-    // call every frame/second in the render
     public boolean pickUpItem(Player player) {
-        if((player.hitbox).overlaps(this.hitbox)) {
-            if(player.inventory.size() == 5) {
-                return false;
-            } else {
-                this.inInventory = true;
-                this.sprite = null;
-                player.inventory.add(this);
-                return true;
-            }
+        if(player.inventory.size() == 5) {
+            return false;
+        } else {
+            this.inInventory = true;
+            player.inventory.add(this);
+            itemList.remove(this);
+            return true;
         }
-        return false;
+    }
+
+    public static void createMapItems() {
+        for (int i = 0; i < 6; i++) {
+            new SausageRoll(false);
+        }
+
+        for (int i = 0; i < 6; i++) {
+            new Bread(false);
+        }
     }
 
 }

@@ -70,7 +70,7 @@ public class Player{
      * Instantiates the player's initial items and fills the inventory with them
      */
     private void addInitialItems() {
-        inventory.add(0,new Seeds(true));
+        inventory.add(0,new Bread(true));
         inventory.add(1,new SausageRoll(true));
     }
 
@@ -169,13 +169,17 @@ public class Player{
     public void useItem(int slot) {
         if (slot < inventory.size()) {
             Item item = inventory.get(slot);
-            item.useItem(this,null);
+            if (item.name.equals("Bread")) {
+                item.useItem(this,Goose.gooseList);
+            } else {
+                item.useItem(this,null);
+            }
+
             inventory.remove(item);
             GameLogic.itemsUsed++;
         }
     }
 
-    // TODO might have moved to Item class
     /**
      * Changes the player's health
      *

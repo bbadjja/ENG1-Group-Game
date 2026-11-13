@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /** First screen of the application. Displayed after the application is created. */
 public class GameScreen implements Screen {
     private final Texture BACKGROUND = new Texture("map_temp.png");
@@ -32,11 +35,21 @@ public class GameScreen implements Screen {
         player.sprite.setCenter(0,0); // This is now center
         Gdx.input.setInputProcessor(new PlayerInputListener(player));
 
-        // TODO temp remove this
-        Goose testGoose = new Goose();
-        testGoose.sprite.setCenter(player.sprite.getX()-4,player.sprite.getY());
+        Goose goose1 = new Goose();
+        goose1.goosePos.set(player.sprite.getX()-8,player.sprite.getY());
+
+        Goose goose2 = new Goose();
+        goose2.goosePos.set(player.sprite.getX(),player.sprite.getY()-8);
+
+        Goose goose3 = new Goose();
+        goose3.goosePos.set(player.sprite.getX()+4,player.sprite.getY()+8);
+
+        for (Goose goose : Goose.gooseList) {
+            goose.sprite.setPosition(goose.goosePos.x,goose.goosePos.y);
+        }
 
         Event.createEvents();
+        Item.createMapItems();
     }
 
     /**
@@ -77,21 +90,23 @@ public class GameScreen implements Screen {
         game.batch.setProjectionMatrix(game.uiViewport.getCamera().combined);
 
         game.batch.draw(BACKGROUND, 0, 0, screenWidth, screenHeight);
-        // TODO draw fence - world limit
 
         // Alters coordinates to be based on camera position
         game.viewport.apply();
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
-        for (Goose goose : Goose.gooseList) {
-            goose.sprite.draw(game.batch);
-        }
-
         for (Event event : Event.eventList) {
             if (event.sprite != null) {
                 event.sprite.draw(game.batch);
             }
+        }
 
+        for (Item item : Item.itemList) {
+            item.sprite.draw(game.batch);
+        }
+
+        for (Goose goose : Goose.gooseList) {
+            goose.sprite.draw(game.batch);
         }
 
         player.sprite.draw(game.batch);
@@ -153,7 +168,6 @@ public class GameScreen implements Screen {
 
         for (int slot = 0; slot < player.INVENTORY_SIZE; slot++) {
             game.batch.draw(INVENTORY_SLOT,x,y,size,size);
-            // TODO one potential way to display items in inventory
 
             if (slot < player.inventory.size()) {
                 float itemX = x + (size-itemSize)/2;

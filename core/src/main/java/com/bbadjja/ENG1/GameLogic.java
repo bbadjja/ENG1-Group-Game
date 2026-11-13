@@ -50,6 +50,10 @@ public class GameLogic {
         if (!isPaused){
             screen.player.move(delta);
 
+            for (Goose goose : Goose.gooseList) {
+                goose.movement(delta,screen.player);
+            }
+
             if (timeRemaining <= 0) {
                 endGame(false);
             } else {
@@ -100,9 +104,11 @@ public class GameLogic {
             }
 
             // TODO might need to change this depending on how Item class works
-            for (Item item : Item.itemList) {
+            @SuppressWarnings("unchecked")
+            ArrayList<Item> currentList = (ArrayList<Item>) Item.itemList.clone();
+            for (Item item :  currentList) {
                 if (item.sprite.getBoundingRectangle().overlaps(screen.player.hitbox)) {
-                    screen.player.pickupItem(item);
+                    item.pickUpItem(screen.player);
                 }
             }
         }
