@@ -13,6 +13,7 @@ public abstract class Event {
     public Rectangle triggerArea;
     public boolean manualTrigger;
     public Sprite sprite;
+    public boolean triggered;
 
     public static ArrayList<Event> eventList = new ArrayList<>();
 
@@ -21,6 +22,7 @@ public abstract class Event {
         this.triggerArea = initialRect;
         this.manualTrigger = manualTrigger;
         this.sprite = null;
+        this.triggered = false;
 
         eventList.add(this);
     }

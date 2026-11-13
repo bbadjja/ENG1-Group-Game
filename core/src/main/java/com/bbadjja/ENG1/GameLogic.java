@@ -84,6 +84,7 @@ public class GameLogic {
                     }
 
                     if (eventHitbox.overlaps(playerHitbox)) {
+                        event.triggered = true;
                         if (!currentEvents.contains(event)) {
                             event.onPlayerEnter(screen.player);
                             currentEvents.add(event);

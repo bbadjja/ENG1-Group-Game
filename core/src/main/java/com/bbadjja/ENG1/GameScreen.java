@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
         for (Event event : Event.eventList) {
-            if (event.sprite != null) {
+            if (event.sprite != null && event.triggered) {
                 event.sprite.draw(game.batch);
             }
         }
