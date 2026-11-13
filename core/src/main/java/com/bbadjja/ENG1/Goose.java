@@ -15,7 +15,6 @@ public class Goose {
     int speed;
     Vector2 goosePos;
 
-    boolean altTarget;
     float speedTimer;
     float targetTimer;
 
@@ -28,7 +27,6 @@ public class Goose {
         hitbox = new Rectangle();
         //target = calculateTarget(Player player);
         speed = 4;
-        altTarget = false;
         target = new Vector2();
         goosePos = new Vector2();
 
