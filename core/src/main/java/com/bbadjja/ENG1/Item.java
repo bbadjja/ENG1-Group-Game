@@ -3,6 +3,8 @@ package com.bbadjja.ENG1;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import java.util.Random;
+//import java.util.random.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -13,15 +15,18 @@ public abstract class Item {
     String name;
     boolean inInventory;
     Rectangle initialPlacement;
+    Rectangle hitbox;
 
     public static ArrayList<Item> itemList = new ArrayList<>();
 
     // constructor
-    public Item(String name, Texture texture, boolean inInventory, Rectangle initialPlacement) {
+    public Item(String name, Texture texture, boolean inInventory, Rectangle initialPlacement, Rectangle hitbox) {
         //this.itemID = itemID; // first digit is item subclass, second digit is no. within that subclass
         this.name = name;
         this.inInventory = inInventory;
-        this.sprite = new Sprite(texture);
+        sprite = new Sprite(texture);
+        hitbox = sprite.getBoundingRectangle();
+
 
         // TODO Need to calculate initialPlacement some way
         //  E.g. maybe each item has preset spawn locations in a list
@@ -29,9 +34,10 @@ public abstract class Item {
         //  the super constructor
 
         if (!inInventory) {
-            placeOnMap(this.initialPlacement);
+            this.initialPlacement = placeOnMap();
             itemList.add(this);
         }
+
     }
 
     /**
@@ -51,18 +57,32 @@ public abstract class Item {
         return ID;
     }
 
-    public abstract void useItem(Player player);
+    public abstract void useItem(Player player, Goose goose);
 
-    public void placeOnMap(Rectangle placement) {
-        // This should not be abstract as same code for all items
-        // Just place in a position, coords x and y
+    public Rectangle placeOnMap() {
+
+        Random r = new Random();
+        float x = 0 + r.nextFloat() * 5000;
+        float y = 0 + r.nextFloat() * 5000;
 
         // Set sprite x and y to the parameters x and y
+        this.sprite.setSize(1, 1);
+        return(new Rectangle(x, y, 1, 1));
     }
 
-    public void pickUpItem() {
-        this.inInventory = true;
-        // something to remove sprite from map
+    // call every frame/second in the render
+    public boolean pickUpItem(Player player) {
+        if((player.hitbox).overlaps(this.hitbox)) {
+            if(player.inventory.size() == 5) {
+                return false;
+            } else {
+                this.inInventory = true;
+                this.sprite = null;
+                player.inventory.add(this);
+                return true;
+            }
+        }
+        return false;
     }
 
 }

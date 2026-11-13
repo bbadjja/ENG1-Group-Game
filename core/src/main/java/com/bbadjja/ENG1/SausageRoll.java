@@ -21,13 +21,14 @@ public class SausageRoll extends Item {
     //  if inInventory is true, item was placed into inventory when created
     //  so no initalPlacement needed, so initalPlacement can be null - conditional
     public SausageRoll(boolean inInventory) {
-        super("SausageRoll",TEXTURE,inInventory,null);
+        super("SausageRoll", TEXTURE, true, null, null);
 
-        itemNumber++;
         this.itemID = generateItemID("1",itemNumber);
+        itemNumber++;
     }
 
-    public void useItem(Player player) {
+    @Override
+    public void useItem(Player player, Goose goose) {
         player.changeHealth(15);
         this.inInventory = false;
     }

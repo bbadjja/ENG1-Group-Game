@@ -169,34 +169,13 @@ public class Player{
     public void useItem(int slot) {
         if (slot < inventory.size()) {
             Item item = inventory.get(slot);
-            item.useItem(this);
+            item.useItem(this,null);
             inventory.remove(item);
             GameLogic.itemsUsed++;
         }
     }
 
     // TODO might have moved to Item class
-    /**
-     * Attempts to pick up an item the player has collided with
-     *
-     * @param item the item to be picked up
-     * @return whether the item could be picked up, false if inventory is full
-     */
-    public boolean pickupItem(Item item) {
-        // TODO Called by GameLogic when player's hitbox collides with item's hitbox
-
-        if (inventoryFull()) {
-            return false;
-        } else {
-            inventory.add(item);
-            return true;
-        }
-    }
-
-    public boolean inventoryFull() {
-        return inventory.size() < INVENTORY_SIZE;
-    }
-
     /**
      * Changes the player's health
      *
@@ -237,6 +216,10 @@ public class Player{
 
     public float getSpeed() {
         return this.movementSpeed;
+    }
+
+    public Rectangle getHitBox() {
+        return this.hitbox;
     }
 
 }
