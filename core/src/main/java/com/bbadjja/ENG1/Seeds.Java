@@ -2,9 +2,9 @@ package com.bbadjja.ENG1;
 
 import com.badlogic.gdx.graphics.Texture;
 
-class Seeds extends Item {
+public class Seeds extends Item {
     private static int itemNumber = 0;
-    private final static Texture TEXTURE = new Texture("char_temp.png");
+    private final static Texture TEXTURE = new Texture("bread.png");
 
     public Seeds(boolean inInventory) {
         // TODO initialPlacement could be got from a list using itemNumber as the index
@@ -29,7 +29,6 @@ class Seeds extends Item {
        goose.changeTarget(this.hitbox, 5);
 
         this.inInventory = false;
-        player.inventory.remove(this);
     }
 
 }

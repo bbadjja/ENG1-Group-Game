@@ -12,7 +12,7 @@ is recorded so that the geese's target can be altered
 
 */
 
-class SausageRoll extends Item {
+public class SausageRoll extends Item {
     // TODO made these static as they should be the same for all SausageRoll objects
     private static int itemNumber = 0;
     private final static Texture TEXTURE = new Texture("char_temp.png");
@@ -31,7 +31,6 @@ class SausageRoll extends Item {
     public void useItem(Player player, Goose goose) {
         player.changeHealth(15);
         this.inInventory = false;
-        player.inventory.remove(this);
     }
 
 }
