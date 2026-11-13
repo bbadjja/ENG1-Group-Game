@@ -16,10 +16,10 @@ is recorded so that the geese's target can be altered
 
 public class SausageRoll extends Item {
     private static int itemNumber = 0;
-    private final static Texture TEXTURE = new Texture("char_temp.png");
+    private final static Texture TEXTURE = new Texture("sausage_roll.png");
 
     public SausageRoll(boolean inInventory) {
-        super("SausageRoll", TEXTURE, inInventory, null);
+        super("SausageRoll", TEXTURE, inInventory);
 
         this.itemID = generateItemID("1",itemNumber);
         itemNumber++;

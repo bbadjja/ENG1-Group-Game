@@ -9,7 +9,7 @@ public class Bread extends Item {
     private final static Texture TEXTURE = new Texture("bread.png");
 
     public Bread(boolean inInventory) {
-        super("Bread", TEXTURE, inInventory, null);
+        super("Bread", TEXTURE, inInventory);
 
         this.itemID = generateItemID("2",itemNumber);
     }

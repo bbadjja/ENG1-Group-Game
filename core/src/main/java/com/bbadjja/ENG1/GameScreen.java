@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,7 +103,7 @@ public class GameScreen implements Screen {
             }
         }
 
-        for (Item item : Item.itemList) {
+        for (Item item : Item.itemList) {;
             item.sprite.draw(game.batch);
         }
 

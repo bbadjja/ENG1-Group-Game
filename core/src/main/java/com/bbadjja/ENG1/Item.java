@@ -20,16 +20,24 @@ public abstract class Item {
     public static ArrayList<Item> itemList = new ArrayList<>();
 
     // constructor
-    public Item(String name, Texture texture, boolean inInventory, Rectangle hitbox) {
+    public Item(String name, Texture texture, boolean inInventory) {
         //this.itemID = itemID; // first digit is item subclass, second digit is no. within that subclass
         this.name = name;
         this.inInventory = inInventory;
         sprite = new Sprite(texture);
-        hitbox = sprite.getBoundingRectangle();
 
         if (!inInventory) {
             this.initialPlacement = placeOnMap();
             itemList.add(this);
+
+            if (this.name.equals("Bread")){
+                this.hitbox = new Rectangle(sprite.getX()+0.25f,sprite.getY()+0.3f,sprite.getWidth()-0.5f,sprite.getHeight()-0.55f);
+            } else if (this.name.equals("SausageRoll")){
+                this.hitbox = new Rectangle(sprite.getX()+0.1f,sprite.getY()+0.1f,sprite.getWidth()-0.2f,sprite.getHeight()-0.2f);
+            } else {
+                this.hitbox = sprite.getBoundingRectangle();
+            }
+
         }
 
     }
