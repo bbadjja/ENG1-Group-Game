@@ -5,6 +5,10 @@ import com.badlogic.gdx.math.Rectangle;
 
 import java.util.List;
 
+/**
+ * A hidden event consisting of a puddle which trips the {@code Player}
+ *   causing damage and temporary loss of control
+ */
 public class Puddle extends Event{
     private final static Texture TEXTURE = new Texture("puddle.png");
     private final static List<Rectangle> POSITIONS = List.of(
@@ -21,6 +25,9 @@ public class Puddle extends Event{
 
     private int damage;
 
+    /**
+     * Creates a {@code Puddle} instance and sets its damage amount
+     */
     public Puddle() {
         super("Puddle", POSITIONS.get(puddleNum),false,TEXTURE);
         this.damage = 5;

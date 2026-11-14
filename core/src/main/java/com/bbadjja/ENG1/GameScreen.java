@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-/** First screen of the application. Displayed after the application is created. */
+/**
+ * A screen which displays game content and handles window modifications
+ */
 public class GameScreen implements Screen {
     private final Texture BACKGROUND = new Texture("map_temp.png");
     private final Texture INVENTORY_SLOT = new Texture("inventory_slot.png");
@@ -21,7 +23,7 @@ public class GameScreen implements Screen {
     private float screenHeight;
 
     /**
-     * The screen on which the game is displayed
+     * Creates the {@code GameScreen} on which game content is displayed
      *
      * @param game the entrypoint of the game
      */

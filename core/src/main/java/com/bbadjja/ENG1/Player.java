@@ -8,6 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.*;
 
+/**
+ * A player entity which can move and interact with other game entities
+ */
 public class Player{
     private static final HashMap<String,Texture> TEXTURES = new HashMap<>();
     private final int NORMAL_SPEED = 5;

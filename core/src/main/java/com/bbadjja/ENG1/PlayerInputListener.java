@@ -3,11 +3,14 @@ package com.bbadjja.ENG1;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 
+/**
+ * A listener which handles inputs for the {@code Player} provided by the user
+ */
 public class PlayerInputListener extends InputAdapter {
     private Player player;
 
     /**
-     * A Listener which handles any inputs relating to the {@code player}
+     * Creates a {@code PlayerInputListener} to handle player inputs
      *
      * @param player the target of all inputs handled by this listener
      */

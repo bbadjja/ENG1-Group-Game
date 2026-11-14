@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
+/**
+ * The entry point for the game
+ */
 public class Main extends Game {
     public final GlyphLayout GLYPH_LAYOUT = new GlyphLayout();
 

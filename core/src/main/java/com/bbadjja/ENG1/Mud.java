@@ -6,6 +6,9 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * A hidden event consisting of mud which slows the {@code Player} when stepped in
+ */
 public class Mud extends Event{
     private final static Texture TEXTURE = new Texture("mud.png");
     private static final List<Rectangle> POSITIONS = List.of(
@@ -22,6 +25,9 @@ public class Mud extends Event{
 
     private float speedPercent;
 
+    /**
+     * Creates a {@code Mud} instance and randomises its speed reduction
+     */
     public Mud() {
         super("Mud", POSITIONS.get(mudNum),false,TEXTURE);
         mudNum++;

@@ -4,6 +4,9 @@ import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 
+/**
+ * Handles the game cycle including: pausing, main game flow and ending the game
+ */
 public class GameLogic {
     private static final int FIVE_MINUTES = 5 * 60 * 1000;
 
@@ -71,6 +74,11 @@ public class GameLogic {
         screen.game.viewport.getCamera().position.set(playerX+offsetX,playerY+offsetY,0);
     }
 
+    /**
+     * Handles collisions between the player and other game entities
+     *
+     * @param screen the screen on which collision occurred
+     */
     public static void handleCollisions(GameScreen screen) {
         if (!isPaused) {
             for (Event event : Event.eventList) {
