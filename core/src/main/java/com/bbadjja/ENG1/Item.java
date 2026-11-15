@@ -6,6 +6,10 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.Random;
 import java.util.ArrayList;
 
+/**
+ * An abstract entity item that can be picked up and used by the player
+ * that can affect the Player or Goose class.
+ */
 public abstract class Item {
     Sprite sprite;
     String itemID;
@@ -16,6 +20,13 @@ public abstract class Item {
 
     public static ArrayList<Item> itemList = new ArrayList<>();
 
+    /**
+     * Creates a {@code Item} which can interact with other entities.
+     * 
+     * @param name name of the item type
+     * @param texture image of the item to be displayed
+     * @param inInventory if the item is in the player's inventory
+     */
     public Item(String name, Texture texture, boolean inInventory) {
         this.name = name;
         this.inInventory = inInventory;
@@ -38,11 +49,10 @@ public abstract class Item {
     }
 
     /**
-     * Creates a unique ID for every object. The first digit is specific to the
-     * child class it comes from and the second digit is what number object
-     * it is within that class (1, 2, 3...)
+     * Creates a unique ID for every object using the item number and 
+     * object number.
      *
-     * @param itemNum the unique number for the child class
+     * @param itemNum the unique number for the Item child class
      * @param objNum the number that object is within the class
      * @return the unique ID for that instance
      */
@@ -54,8 +64,19 @@ public abstract class Item {
         return ID;
     }
 
+    /**
+     * Carries out the effects of using an item.
+     * 
+     * @param player the player entity
+     * @param gooseList the list of all Goose instances
+     */
     public abstract void useItem(Player player, ArrayList<Goose> gooseList);
 
+    /**
+     * Places the item randomly on the map.
+     * 
+     * @return a rectangle of where the item is on the map
+     */
     public Rectangle placeOnMap() {
 
         Random r = new Random();
@@ -67,6 +88,14 @@ public abstract class Item {
         return(new Rectangle(x, y, 1, 1));
     }
 
+    /**
+     * Checks if the player's inventory is full, adds the item to it
+     * if it isn't.
+     * 
+     * @param player
+     * @return true if the item has successfully been added, otherwise
+     * false
+     */
     public boolean pickUpItem(Player player) {
         if(player.inventory.size() == 5) {
             return false;
@@ -78,6 +107,9 @@ public abstract class Item {
         }
     }
 
+    /**
+     * Creates and places the initial items for Ass. 1.
+     */
     public static void createMapItems() {
         for (int i = 0; i < 6; i++) {
             new SausageRoll(false);

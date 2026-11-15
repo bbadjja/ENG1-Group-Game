@@ -4,16 +4,10 @@ import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
 
-/*
-
-Item number is used to count how many sausage rolls there are, makes up the
-second digit of itemID. The first is '1' which is for all SausageRoll objects.
-
-usePlacement is for when the sausage roll is used, the location it's used on
-is recorded so that the geese's target can be altered
-
-*/
-
+/**
+ * 
+ * An item SausageRoll that increases player health upon use.
+ */
 public class SausageRoll extends Item {
     private static int itemNumber = 0;
     private final static Texture TEXTURE = new Texture("sausage_roll.png");
@@ -25,6 +19,12 @@ public class SausageRoll extends Item {
         itemNumber++;
     }
 
+    /**
+     * Increments player health by 15 and removes the instance from
+     * the player's inventory.
+     *
+     * @see Item#useItem(Player, ArrayList)
+     */
     @Override
     public void useItem(Player player, ArrayList<Goose> gooseList) {
         player.changeHealth(15);

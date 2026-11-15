@@ -4,6 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
 
+/**
+ * An item Bread that causes stops all Goose objects for 5 seconds.
+ */
 public class Bread extends Item {
     private static int itemNumber = 0;
     private final static Texture TEXTURE = new Texture("bread.png");
